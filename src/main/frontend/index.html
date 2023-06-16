@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>login</title>
+    <link rel="stylesheet" type="text/css" href="pageContent.css"/>
+    <script src="pageContent.js"></script>
+    <script src="Click.js"></script>
+</head>
+<body>
+<div class="control">
+    <div class="item">
+        <div class="active">login</div>
+        <div>register</div>
+    </div>
+    <div class="content">
+        <div style="display: block;">
+            <p>account</p>
+            <input type="text" placeholder="username" id="login-username"/>
+            <p>password</p>
+            <input type="password" placeholder="password" id="login-password"/>
+            <br/>
+            <input type="submit" value="login"/>
+        </div>
+        <div>
+            <p>username</p>
+            <input type="text" placeholder="username" id="register-username"/>
+            <p>password</p>
+            <input type="password" placeholder="password" id="register-password"/>
+            <p>email</p>
+            <input type="text" placeholder="email" id="register-email"/>
+            <br/>
+            <input type="submit" value="login" onclick="register()"/>
+        </div>
+    </div>
+</div>
+</body>
+</html>
