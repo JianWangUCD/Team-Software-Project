@@ -5,7 +5,9 @@ UCD COMP47250 Summer Team Software Project
 
 http://localhost:8080/api/flashsale
 
+## REST Test Tool
 
+https://chrome.google.com/webstore/detail/yet-another-rest-client/ehafadccdcdedbhcbddihehiodgcddpl
 
 ## MySQL/H2
 
