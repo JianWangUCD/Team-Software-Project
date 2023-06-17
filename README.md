@@ -13,8 +13,8 @@ https://chrome.google.com/webstore/detail/yet-another-rest-client/ehafadccdcdedb
 
 1. ### MySQL
 
-   - change datasource url in application.properties file
-   - change mysql version from 8.0.33 to your version in pom.xml
+   - change datasource url in **application.properties**
+   - change mysql version from 8.0.33 to your version in **pom.xml**
    - click Reload All Maven Projects button
 
 2. ### H2
