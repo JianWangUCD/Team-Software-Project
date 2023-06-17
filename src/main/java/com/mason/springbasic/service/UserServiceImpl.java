@@ -28,9 +28,9 @@ public class UserServiceImpl {
         System.out.println(userPojo);
     }
 
-    public void updateUserByUsername(String username){
+    public void updateUserByUsername(String username) {
         UserPojo userPojo = userDao.selectById(username);
         userPojo.setPassword("111111");
-        userDao.update(userPojo,new QueryWrapper<UserPojo>().eq("username",username));
+        userDao.update(userPojo, new QueryWrapper<UserPojo>().eq("username", username));
     }
 }
