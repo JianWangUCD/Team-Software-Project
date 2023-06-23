@@ -26,28 +26,20 @@ public class ProductController {
     }
 
     //search by id
-    @GetMapping("/flashsale/{id}")
+    @GetMapping("/flashsale/products/{id}")
     public Product getProduct(@PathVariable long id) {
 
         Product product = productService.getProduct(id);
         return product;
     }
 
-    //search by brand
-    @GetMapping("/flashsale/products/{brand}")
-    public List<Product> getProduct(@PathVariable String brand) {
-
-        List<Product> products = productService.getProduct(brand);
-        return products;
-    }
-
-    //search by product name
-    @GetMapping("/flashsale/product/{productName}/{anyNumber}")
-    public Product getProduct(@PathVariable String productName, @PathVariable Long anyNumber) {
-
-        Product product = productService.getProduct(productName, anyNumber);
-        return product;
-    }
+//    //search by product name
+//    @GetMapping("/flashsale/product/{productName}/{anyNumber}")
+//    public Product getProduct(@PathVariable String productName, @PathVariable Long anyNumber) {
+//
+//        Product product = productService.getProduct(productName, anyNumber);
+//        return product;
+//    }
 
     @DeleteMapping("/flashsale/products/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable long id) {
@@ -58,25 +50,25 @@ public class ProductController {
         return responseEntity;
     }
 
-    @PutMapping("/flashsale/{brand}/products/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable String brand, @PathVariable long id,
+    @PutMapping("/flashsale/products/{id}")
+    public ResponseEntity<Product> updateProduct(@PathVariable long id,
                                            @RequestBody Product product) {
 
-        product.setBrand(brand);
+        //product.setBrand(brand);
 
-        Product productUpdated = productService.updateProduct(brand, id, product);
+        Product productUpdated = productService.updateProduct(id, product);
 
         ResponseEntity<Product> responseEntity = new ResponseEntity<Product>(productUpdated, HttpStatus.OK);
 
         return responseEntity;
     }
 
-    @PostMapping("/flashsale/{brand}/products")
-    public ResponseEntity<Void> createProduct(@PathVariable String brand, @RequestBody Product product) {
+    @PostMapping("/flashsale/products")
+    public ResponseEntity<Void> createProduct(@RequestBody Product product) {
 
-        product.setBrand(brand);
+        //product.setBrand(brand);
 
-        Product createdProduct = productService.createProduct(brand, product);
+        Product createdProduct = productService.createProduct(product);
 
         if (createdProduct == null)
             return ResponseEntity.noContent().build();

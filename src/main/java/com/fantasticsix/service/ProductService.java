@@ -9,13 +9,11 @@ public interface ProductService {
 
     Product getProduct(long id);
 
-    List<Product> getProduct(String brand);
-
-    Product getProduct(String productName, long temp);
+//    Product getProduct(String productName, long temp);
 
     void deleteProduct(long id);
 
-    Product updateProduct(String brand, long id, Product product);
+    Product updateProduct(long id, Product product);
 
-    Product createProduct(String brand, Product product);
+    Product createProduct(Product product);
 }

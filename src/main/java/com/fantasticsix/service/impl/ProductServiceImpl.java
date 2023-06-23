@@ -34,15 +34,10 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
     }
 
-    @Override
-    public List<Product> getProduct(String brand) {
-        return productRepository.findProductByBrand(brand);
-    }
-
-    @Override
-    public Product getProduct(String productName, long temp) {
-        return productRepository.findProductByProductName(productName);
-    }
+//    @Override
+//    public Product getProduct(String productName, long temp) {
+//        return productRepository.findProductByProductName(productName);
+//    }
 
     @Override
     public void deleteProduct(long id) {
@@ -55,13 +50,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product updateProduct(String brand, long id, Product product) {
+    public Product updateProduct(long id, Product product) {
         Product productUpdated = productRepository.save(product);
         return productUpdated;
     }
 
     @Override
-    public Product createProduct(String brand, Product product) {
+    public Product createProduct(Product product) {
         Product createdProduct = productRepository.save(product);
         return createdProduct;
     }
