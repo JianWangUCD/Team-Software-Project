@@ -1,0 +1,52 @@
+import React, { useEffect, useState } from 'react'
+import axios from 'axios';
+import Product from '../component/Product';
+
+import Home from '../component/Home';
+import LoadingBox from '../component/LoadingBox';
+import MessageBox from '../component/MessageBox';
+
+export default function HomePage() {
+
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
+
+  useEffect (() => {
+    const fecthData = async ()  => {
+      try{
+        setLoading(true);
+        const { data } = await axios.get('http://localhost:8000/products');
+        // const { data } = await axios.get('http://localhost:8080/flashsale/products');
+        setLoading(false);
+        setProducts(data);
+      } catch(err){
+        setError(err.meesage);
+        setLoading(false);
+      }
+  
+    };
+    // call function to get data
+    fecthData();
+   }, []);
+
+  return (
+    <div>
+      <Home />
+      {
+        loading ? (<LoadingBox></LoadingBox>)
+        :
+        error ? (<MessageBox>{error}</MessageBox>)
+        :
+        (
+        <div className="row center">
+            {
+              products.map((product) => (
+               <Product key = {product.id} product = {product}></Product>
+              ))}
+        </div>)
+      }
+      
+    </div>
+  )
+}
