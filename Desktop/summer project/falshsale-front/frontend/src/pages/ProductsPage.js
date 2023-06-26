@@ -5,7 +5,19 @@ import axios from 'axios';
 import LoadingBox from '../component/LoadingBox';
 import MessageBox from '../component/MessageBox';
 
+
+
 export default function ProductsPage() {
+
+const username = '111';
+const password = '111';
+
+const credentials = window.btoa(username + ':' + password);
+const headers = {
+  'Authorization': 'Basic ' + credentials,
+  'Content-Type': 'application/json'
+};
+  
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
@@ -14,8 +26,8 @@ export default function ProductsPage() {
     const fecthData = async ()  => {
       try{
         setLoading(true);
-        const { data } = await axios.get('http://localhost:8000/products');
-        // const { data } = await axios.get('http://localhost:8080/flashsale/products');
+        // const { data } = await axios.get('http://localhost:8000/products');
+        const { data } = await axios.get('http://localhost:8080/api/flashsale/products', { headers });
         setLoading(false);
         setProducts(data);
       } catch(err){

@@ -4,12 +4,21 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function AddProduct() {
+
+  const username = '111';
+  const password = '111';
+
+  const credentials = window.btoa(username + ':' + password);
+  const headers = {
+  'Authorization': 'Basic ' + credentials,
+  'Content-Type': 'application/json'
+};
     let navigate = useNavigate();
 
   const [product, setProduct] = useState({
         id: "",
         sellerId: "",
-        name: "",
+        productName: "",
         img: "",
         detail: "",
         price: "",
@@ -18,15 +27,32 @@ export default function AddProduct() {
         saleEndTime: ""
   }); 
 
-  const { id, sellerId, name, img, detail, price, stock, saleStartTime, saleEndTime } = product;
+  const { id, sellerId, productName, img, detail, price, stock, saleStartTime, saleEndTime } = product;
   const onInputChange = async (e) => {
-    setProduct({ ...product, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    if (name === "id" || name === "sellerId" || name === "stock") {
+      setProduct({ ...product, [name]: parseInt(value) });
+    } else if (name === "price") {
+      setProduct({ ...product, [name]: parseFloat(value) });
+    } else if (name === "saleStartTime" || name === "saleEndTime") {
+      setProduct({ ...product, [name]: new Date(value) });
+    } else {
+      setProduct({ ...product, [name]: value });
+    }
+    // setProduct({ ...product, [e.target.name]: e.target.value });
   };
+  const onTimeConfirm = (name, value) => {
+    setProduct({ ...product, [name]: value });
+  };
+  
+  
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    await axios.post("http://localhost:8000/product", product);
-    navigate("/");
+    // await axios.post("http://localhost:8000/product", product);
+    await axios.post("http://localhost:8080/api/flashsale/products" , product, { headers },);
+    navigate("/products");
   };
   
   return (
@@ -65,15 +91,15 @@ export default function AddProduct() {
             </div>
 
             <div className="mb-3">
-              <label htmlFor="Name" className="form-label">
+              <label htmlFor="productName" className="form-label">
               Name
               </label>
               <input
                 type={"text"}
                 className="form-control"
                 placeholder="Enter product name"
-                name="name"
-                value={name}
+                name="productName"
+                value={productName}
                 onChange={(e) => onInputChange(e)}
               />
             </div>
@@ -134,12 +160,15 @@ export default function AddProduct() {
               saleStartTime
               </label>
               <input
-                type={"text"}
+                type="datetime-local"
                 className="form-control"
                 placeholder="Enter sale Start Time"
                 name="saleStartTime"
-                value={saleStartTime}
+                value={saleStartTime ? saleStartTime.toISOString().slice(0, 16) : ''}
                 onChange={(e) => onInputChange(e)}
+                onBlur={() => onTimeConfirm("saleStartTime", new Date(document.getElementsByName("saleStartTime")[0].value))}
+                // value={saleStartTime}
+                // onChange={(e) => onInputChange(e)}
               />
             </div>
             <div className="mb-3">
@@ -147,12 +176,15 @@ export default function AddProduct() {
               saleEndTime
               </label>
               <input
-                type={"text"}
+                type="datetime-local"
                 className="form-control"
                 placeholder="Enter sale End Time"
                 name="saleEndTime"
-                value={saleEndTime}
+                value={saleEndTime ? saleEndTime.toISOString().slice(0, 16) : ''}
                 onChange={(e) => onInputChange(e)}
+                onBlur={() => onTimeConfirm("saleEndTime", new Date(document.getElementsByName("saleEndTime")[0].value))}
+                // value={saleEndTime}
+                // onChange={(e) => onInputChange(e)}
               />
             </div>
             <button type="submit" className="btn btn-outline-primary">

@@ -4,6 +4,15 @@ import { Link, useParams } from "react-router-dom";
 // import Navbar from '../component/Navbar'
 
 export default function SellerPage() {
+  const username = '111';
+  const password = '111';
+
+  const credentials = window.btoa(username + ':' + password);
+  const headers = {
+  'Authorization': 'Basic ' + credentials,
+  'Content-Type': 'application/json'
+};
+
   const [products, setProducts] = useState([]);
 
 
@@ -12,14 +21,14 @@ export default function SellerPage() {
   }, []);
 
   const loadProducts = async () => {
-    const result = await axios.get('http://localhost:8000/products');
-    // const result = await axios.get('http://localhost:8080/flashsale/products');
+    // const result = await axios.get('http://localhost:8000/products');
+    const result = await axios.get('http://localhost:8080/api/flashsale/products', { headers });
     setProducts(result.data);
   };
 
   const deleteProducts = async (id) => {
-    await axios.delete(`http://localhost:8000/product/${id}`);
-    // await axios.delete(`http://localhost:8080/flashsale/products/${id}`);
+    // await axios.delete(`http://localhost:8000/product/${id}`);
+    await axios.delete(`http://localhost:8080/api/flashsale/products/${id}`, { headers });
     loadProducts();
   };
 
@@ -39,8 +48,10 @@ export default function SellerPage() {
           <tbody>
             {products.map((product) => (
               <tr>
-                <td>{product.name}</td>
-                <td>{product.img}</td>
+                <td>{product.productName}</td>
+                <td>
+                <img className="card-img-top p-3" src={product.img} alt={product.productName} style={{ width: '200px', height: '200px' }}/>
+                </td>
                 <td>{product.stock}</td>
                 <td>{product.detail}</td>
                 <td>

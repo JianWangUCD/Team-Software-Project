@@ -8,12 +8,12 @@ export default function Product(props) {
       <div key={product.id} className="col-md-4 col-sm-6 col-xs-8 col-12 mb-4">
         <div className="card text-center h-100" key={product.id}>
         <a href={`/product/${product.id}`}>
-                  <img className="card-img-top p-3" src={product.img} alt={product.name} height={300} />
+                  <img className="card-img-top p-3" src={product.img} alt={product.productName} height={300} />
                 </a>
                 <div className="card-body">
                   <h5 className="card-title">
                   <a href={`/product/${product.id}`}>
-                    {product.name}
+                    {product.productName}
                   </a>
                   </h5>
                   <ul className="list-group list-group-flush">
