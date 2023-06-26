@@ -1,16 +1,26 @@
 package com.fantasticsix.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
+import java.util.HashSet;
 
 @Entity
+@Table(name = "products")
 public class Product {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Integer sellerId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "seller_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private Seller seller;
+    //private Integer sellerId;
     private String productName;
     private String img;
     private String detail;
@@ -18,12 +28,19 @@ public class Product {
     private Integer stock;
     private Date saleStartTime;
     private Date saleEndTime;
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            },
+            mappedBy = "products")
+    @JsonIgnore
+    private Set<Order> orders = new HashSet<>();
 
     public Product(){}
 
-    public Product(Long id, Integer sellerId, String productName, String img, String detail, Double price, Integer stock, Date saleStartTime, Date saleEndTime) {
+    public Product(Long id, String productName, String img, String detail, Double price, Integer stock, Date saleStartTime, Date saleEndTime) {
         this.id = id;
-        this.sellerId = sellerId;
         this.productName = productName;
         this.img = img;
         this.detail = detail;
@@ -41,12 +58,12 @@ public class Product {
         this.id = id;
     }
 
-    public Integer getSellerId() {
-        return sellerId;
+    public Seller getSeller() {
+        return seller;
     }
 
-    public void setSellerId(Integer sellerId) {
-        this.sellerId = sellerId;
+    public void setSeller(Seller seller) {
+        this.seller = seller;
     }
 
     public String getProductName() {
@@ -103,5 +120,13 @@ public class Product {
 
     public void setSaleEndTime(Date saleEndTime) {
         this.saleEndTime = saleEndTime;
+    }
+
+    public Set<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(Set<Order> orders) {
+        this.orders = orders;
     }
 }

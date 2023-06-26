@@ -1,16 +1,19 @@
 package com.fantasticsix.service.impl;
 
 import com.fantasticsix.exception.ProductNotFoundException;
+import com.fantasticsix.model.Order;
 import com.fantasticsix.model.Product;
+import com.fantasticsix.repository.OrderRepository;
 import com.fantasticsix.repository.ProductRepository;
+import com.fantasticsix.repository.SellerRepository;
 import com.fantasticsix.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -19,6 +22,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private SellerRepository sellerRepository;
+    @Autowired
+    private OrderRepository orderRepository;
 
     @Override
     public List<Product> getAllProducts() {
@@ -56,8 +63,72 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product createProduct(Product product) {
-        Product createdProduct = productRepository.save(product);
-        return createdProduct;
+    public Product createProduct(Product productRequest, long sellerId) {
+
+        Product product = sellerRepository.findById(sellerId).map(seller -> {
+            productRequest.setSeller(seller);
+            return productRepository.save(productRequest);
+
+        }).orElseThrow(() -> new ResourceNotFoundException("Not found Seller with id = " + sellerId));
+
+
+        return product;
+
+//        Product createdProduct = productRepository.save(product);
+//        return createdProduct;
     }
+
+//    @Override
+//    public Set<Product> addProductsToOrder(long orderId, Set<Product> productRequestList){
+//        Set<Product> products = new HashSet<>();
+//        for(Product productRequest: productRequestList){
+//            Product product = orderRepository.findById(orderId).map(order -> {
+//                Long productId = productRequest.getId();
+//
+//                // product is existed
+//                if(productId != null){
+//                    Product _product = productRepository.findById(productId)
+//                            .orElseThrow(() -> new ResourceNotFoundException("Not found Product with id = " + productId));
+//                    order.addProduct(_product);
+//                    orderRepository.save(order);
+//                    return _product;
+//                }
+//
+//                // add and create new product
+//                order.addProduct(productRequest);
+//                return productRepository.save(productRequest);
+//            }).orElseThrow(() -> new ResourceNotFoundException("Not found Order with id = " + orderId));
+//
+//            products.add(product);
+//        }
+//        return products;
+//    }
+
+    @Override
+    public Set<Product> addProductsToOrder(long orderId, Set<Product> productRequestList) {
+        Set<Product> products = new HashSet<>();
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Not found Order with id = " + orderId));
+
+        for (Product productRequest : productRequestList) {
+            Long productId = productRequest.getId();
+
+            // product is existed
+            if (productId != null) {
+                Product product = productRepository.findById(productId)
+                        .orElseThrow(() -> new ResourceNotFoundException("Not found Product with id = " + productId));
+                order.addProduct(product);
+                products.add(product);
+            } else {
+                order.addProduct(productRequest);
+                Product savedProduct = productRepository.save(productRequest); // 直接保存游离状态的产品对象
+                products.add(savedProduct);
+            }
+        }
+
+        orderRepository.save(order);
+
+        return products;
+    }
+
 }

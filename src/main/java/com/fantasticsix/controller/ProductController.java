@@ -63,12 +63,25 @@ public class ProductController {
         return responseEntity;
     }
 
-    @PostMapping("/flashsale/products")
-    public ResponseEntity<Void> createProduct(@RequestBody Product product) {
+//    @PostMapping("/flashsale/products")
+//    public ResponseEntity<Void> createProduct(@RequestBody Product product) {
+//
+//        long sellerId = product.getSeller().getId();
+//
+//        Product createdProduct = productService.createProduct(product, sellerId);
+//
+//        if (createdProduct == null)
+//            return ResponseEntity.noContent().build();
+//
+//        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(createdProduct.getId())
+//                .toUri();
+//
+//        return ResponseEntity.created(uri).build();
+//    }
+    @PostMapping("/flashsale/products/{sellerId}")
+    public ResponseEntity<Void> createProduct(@RequestBody Product product, @PathVariable(value = "sellerId") long sellerId){
 
-        //product.setBrand(brand);
-
-        Product createdProduct = productService.createProduct(product);
+        Product createdProduct = productService.createProduct(product, sellerId);
 
         if (createdProduct == null)
             return ResponseEntity.noContent().build();
