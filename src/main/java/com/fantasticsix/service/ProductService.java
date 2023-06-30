@@ -18,5 +18,6 @@ public interface ProductService {
 
     Product createProduct(Product productRequest, long sellerId);
 
-    Set<Product> addProductsToOrder(long orderId, Set<Product> productRequestList);
+    //Set<Product> addProductsToOrder(long orderId, Set<Product> productRequestList);
+    Product addProductsToOrder(long orderId, Product productRequest);
 }

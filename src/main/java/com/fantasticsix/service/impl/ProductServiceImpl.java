@@ -105,30 +105,25 @@ public class ProductServiceImpl implements ProductService {
 //    }
 
     @Override
-    public Set<Product> addProductsToOrder(long orderId, Set<Product> productRequestList) {
-        Set<Product> products = new HashSet<>();
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new ResourceNotFoundException("Not found Order with id = " + orderId));
-
-        for (Product productRequest : productRequestList) {
+    public Product addProductsToOrder(long orderId, Product productRequest) {
+        Product product = orderRepository.findById(orderId).map(order -> {
             Long productId = productRequest.getId();
 
             // product is existed
-            if (productId != null) {
-                Product product = productRepository.findById(productId)
+            if(productId != null){
+                Product _product = productRepository.findById(productId)
                         .orElseThrow(() -> new ResourceNotFoundException("Not found Product with id = " + productId));
-                order.addProduct(product);
-                products.add(product);
-            } else {
-                order.addProduct(productRequest);
-                Product savedProduct = productRepository.save(productRequest); // 直接保存游离状态的产品对象
-                products.add(savedProduct);
+                order.addProduct(_product);
+                orderRepository.save(order);
+                return _product;
             }
-        }
 
-        orderRepository.save(order);
+            // add and create new product
+            order.addProduct(productRequest);
+            return productRepository.save(productRequest);
+        }).orElseThrow(() -> new ResourceNotFoundException("Not found Order with id = " + orderId));
 
-        return products;
+        return product;
     }
 
 }

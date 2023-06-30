@@ -97,26 +97,35 @@ public class OrderController {
 //        return ResponseEntity.created(uri).build();
 //    }
 
+//    @PostMapping("/flashsale/checkout/{userId}")
+//    public ResponseEntity<Void> createOrder(@RequestBody Order order, @PathVariable(value = "userId") long userId){
+//
+//        Order createdOrder = orderService.createOrder(order, userId);
+//
+//        Set<Product> products = new HashSet<>();
+//        for (Product product : order.getProducts()) {
+//            Product managedProduct = productRepository.findById(product.getId())
+//                    .orElseThrow(() -> new ResourceNotFoundException("Not found Product with id = " + product.getId()));
+//            products.add(managedProduct);
+//        }
+//
+//        productService.addProductsToOrder(createdOrder.getId(), products);
+//
+//        if (createdOrder == null)
+//            return ResponseEntity.noContent().build();
+//
+//        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(createdOrder.getId())
+//                .toUri();
+//
+//        return ResponseEntity.created(uri).build();
+//    }
     @PostMapping("/flashsale/checkout/{userId}")
-    public ResponseEntity<Void> createOrder(@RequestBody Order order, @PathVariable(value = "userId") long userId){
+    public ResponseEntity<Order> createOrder(@PathVariable(value = "userId") long userId, @RequestBody Order order, @RequestBody Product product) {
 
         Order createdOrder = orderService.createOrder(order, userId);
 
-        Set<Product> products = new HashSet<>();
-        for (Product product : order.getProducts()) {
-            Product managedProduct = productRepository.findById(product.getId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Not found Product with id = " + product.getId()));
-            products.add(managedProduct);
-        }
+        productService.addProductsToOrder(createdOrder.getId(), product);
 
-        productService.addProductsToOrder(createdOrder.getId(), products);
-
-        if (createdOrder == null)
-            return ResponseEntity.noContent().build();
-
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(createdOrder.getId())
-                .toUri();
-
-        return ResponseEntity.created(uri).build();
+        return new ResponseEntity<>(createdOrder, HttpStatus.CREATED);
     }
 }
