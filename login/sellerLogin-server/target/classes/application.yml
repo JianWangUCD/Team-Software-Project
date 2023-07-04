@@ -1,0 +1,20 @@
+server:
+  port: 8082
+spring:
+  application:
+    name: sellerLogin-service
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+#  datasource:
+#    driver-class-name: com.mysql.jdbc.Driver
+#    url: jdbc:mysql:///flashSale?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=true
+#    sellername: root
+#    password: nrah.520.
+#jpa:
+#  properties:
+#    hibernate:
+#      hbm2ddl:
+#        auto: update
+#      dialect: org.hibernate.dialect.MySQL5InnoDBDialect
