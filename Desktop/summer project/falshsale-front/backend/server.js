@@ -6,17 +6,17 @@ const app = express();
 
 app.use(cors());
 
-app.get('/products', (req, res) =>{
+app.get('/api/flashsale/products', (req, res) =>{
     res.send(data.products);
 })
 
-app.get('/products/:id', (req, res) => {
+app.get('/api/flashsale/products/:id', (req, res) => {
     const productId = parseInt(req.params.id);
     const product = data.products.find((product) => product.id === productId);
     res.send(product);
   });
 
-app.post('/product', (req, res) => {
+app.post('/api/flashsale/product', (req, res) => {
     const newProduct = req.body; 
   
     // 在这里将新产品添加到 data.products 中
@@ -30,7 +30,7 @@ app.get('/', (req, res) =>{
     res.send('Server is ready');
 });
 
-const port = process.env.PORT || 8000
+const port = process.env.PORT || 8080
 
 app.listen(port, ()=> {
     console.log(`Server at http://localhost:${port}`);
