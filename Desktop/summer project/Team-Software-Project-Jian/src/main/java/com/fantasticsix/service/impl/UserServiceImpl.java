@@ -7,6 +7,9 @@ import com.fantasticsix.service.UserService;
 import org.springframework.stereotype.Service;
 import com.fantasticsix.util.JwtTokenUtil;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
@@ -31,7 +34,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public String login(String username, String password) {
+    public Map<String, String> login(String username, String password) {
         // 验证用户名和密码
         User user = userRepository.findByUsername(username);
         if (user == null || !user.getPassword().equals(password)) {
@@ -39,13 +42,17 @@ public class UserServiceImpl implements UserService {
         }
 
         // 生成JWT令牌
-        return jwtTokenUtil.generateToken(user);
+        String token = jwtTokenUtil.generateToken(user);
+
+        // 构建返回的用户信息
+        Map<String, String> userInfo = new HashMap<>();
+        userInfo.put("username", user.getUsername());
+        userInfo.put("role", user.getRole());
+        userInfo.put("token", token);
+
+        return userInfo;
     }
 
-    @Override
-    public String getUserRole(String username) {
-        User user = userRepository.findByUsername(username);
-        return user.getRole();
-    }
+
 }
 
