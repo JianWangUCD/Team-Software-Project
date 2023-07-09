@@ -5,14 +5,14 @@ import { Link, useNavigate } from "react-router-dom";
 
 export default function AddProduct() {
 
-  const username = '111';
-  const password = '111';
+//   const username = '111';
+//   const password = '111';
 
-  const credentials = window.btoa(username + ':' + password);
-  const headers = {
-  'Authorization': 'Basic ' + credentials,
-  'Content-Type': 'application/json'
-};
+//   const credentials = window.btoa(username + ':' + password);
+//   const headers = {
+//   'Authorization': 'Basic ' + credentials,
+//   'Content-Type': 'application/json'
+// };
     let navigate = useNavigate();
 
   const [product, setProduct] = useState({
@@ -51,7 +51,7 @@ export default function AddProduct() {
   const onSubmit = async (e) => {
     e.preventDefault();
     // await axios.post("http://localhost:8000/product", product);
-    await axios.post("http://localhost:8080/api/flashsale/products" , product, { headers },);
+    await axios.post("http://localhost:8080/api/flashsale/products" , product);
     navigate("/products");
   };
   

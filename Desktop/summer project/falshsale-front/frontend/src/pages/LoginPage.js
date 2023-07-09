@@ -1,52 +1,37 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { userLogin } from "../action/authAction";
+import { login } from "../action/authAction";
+import MessageBox from "../component/MessageBox";
+import LoadingBox from "../component/LoadingBox";
 
 export default function LoginPage() {
 
-    const [role, setRole] = useState(""); // 用于保存选中的角色
+    const location = useLocation();
+    const navigate = useNavigate();
+
     const [username, setUsername] = useState(""); // 用于保存用户名字
     const [password, setPassword] = useState(""); // 用于保存密码
-  //   const dispatch = useDispatch
+    
+    const dispatch = useDispatch()
+    const redirect = location.search ? location.search.split('=')[1] : '/'
 
-  //   const userLogin = useSelector( state  => state.userLogin)
-  //   const { loading, error, userInfo } = userLogin
-  const handleRoleChange = (e) => {
-    setRole(e.target.value); // 更新选中的角色
-  };
+    
+    // 返回获取的状态值
+    const userLogin = useSelector( state  => state.userLogin)
+    const { loading, error, userInfo } = userLogin
 
-  // useEffect(() => {
-  //   if(userInfo && role){
-
-  //   }
-  // })
+  useEffect(() => {
+    // 如果已经登陆，重新定向
+    if(userInfo){
+      navigate(redirect)}
+  }, [navigate,userInfo, redirect])
     // 登陆函数
-    const submitLogin = async (e) => {
+    
+  const submitLogin = async (e) => {
         e.preventDefault();
-        
-        const path = "/api/" + role + "/login" 
-    
-        // 发送登录请求，获取Token
-        const response = await fetch(path, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ username, password }),
-        });
-    
-        if (response.ok) {
-          const { token } = await response.json();
-    
-          // 将Token保存到本地存储
-          localStorage.setItem("token", token);
-    
-          // 登录成功后的其他操作
-          // 可以跳转到其他页面或执行其他逻辑
-        } else {
-          // 登录失败处理
-        }
+        // 用dispatch来查询，获取登陆后的数据
+        dispatch(login(username, password))
       };
 
   return (
@@ -54,6 +39,8 @@ export default function LoginPage() {
       <div className="container my-3 py-3">
         <h1 className="text-center">Login</h1>
         <hr />
+        { error && <MessageBox>{error}</MessageBox>}
+        { loading && <LoadingBox />}
         <div className="row my-4 h-100">
           <div className="col-md-4 col-lg-4 col-sm-8 mx-auto">
             <form>
@@ -63,8 +50,9 @@ export default function LoginPage() {
                   type={"text"}
                   className="form-control"
                   placeholder="enter username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                  id = "username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                 />
               </div>
               <div class="my-3">
@@ -73,11 +61,13 @@ export default function LoginPage() {
                   type={"text"}
                   class="form-control"
                   placeholder="Password"
+                  id = "password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
-              <div className="my-3">
+              {/* 是否选择角色登陆，如果有两个表，有两个URL，需要选择角色，然后通过判断role使用不同的action */}
+              {/* <div className="my-3">
                 <label htmlFor="role">Role</label>
                 <select
                   className="form-select"
@@ -90,7 +80,7 @@ export default function LoginPage() {
                   <option value="seller">seller</option>
                   <option value="customer">buyer</option>
                 </select>
-              </div>
+              </div> */}
               <div className="my-3">
                 <p>New Here? <Link to="/register" className="text-decoration-underline text-info">Register</Link> </p>
               </div>
@@ -108,104 +98,91 @@ export default function LoginPage() {
   );
 };
 
-// import { useRef, useState, useEffect } from 'react';
-// import useAuth from '../hooks/useAuth';
-// import { Link, useNavigate, useLocation } from 'react-router-dom';
+// import React, { useState, useEffect } from 'react';
+// import axios from 'axios';
+// import jwt from 'jsonwebtoken';
+// import { Navigate } from 'react-router-dom';
+// // import { useHistory } from 'react-router-dom';
 
-// import axios from '../api/axios';
-// const LOGIN_URL = '/auth';
+// const API_BASE_URL = 'http://localhost:8080'; // 后端API的基本URL
 
-// const Login = () => {
-//     const { setAuth } = useAuth();
+// export default function LoginPage() {
+//   // const history = useHistory();
+//   const [username, setUsername] = useState('');
+//   const [password, setPassword] = useState('');
+//   const [errorMessage, setErrorMessage] = useState('');
 
-//     const navigate = useNavigate();
-//     const location = useLocation();
-//     const from = location.state?.from?.pathname || "/";
+//   // useEffect(() => {
+//   //   // 检查本地存储中是否存在有效的token
+//   //   const token = localStorage.getItem('token');
+//   //   if (token) {
+//   //     // 解码JWT
+//   //     const decodedToken = jwt.decode(token);
+//   //     if (decodedToken) {
+//   //       const role = decodedToken.role;
+//   //       // 在这里执行相应的逻辑，比如跳转到其他页面
+//   //     } else {
+//   //       // 无效的JWT，可以在这里清除本地存储中的token和role
+//   //       localStorage.removeItem('token');
+//   //       localStorage.removeItem('role');
+//   //     }
+//   //   }
+//   // }, []);
 
-//     const userRef = useRef();
-//     const errRef = useRef();
+  
 
-//     const [user, setUser] = useState('');
-//     const [pwd, setPwd] = useState('');
-//     const [errMsg, setErrMsg] = useState('');
+//   const handleLogin = async () => {
+//     try {
+//       const response = await axios.post(`${API_BASE_URL}/users/login?username=${username}&password=${password}`);
+//       const data = await response.json();
+//       if (response.ok) {
+//         const { token } = data;
+//         // 解码JWT
+//         const decodedToken = jwt.decode(token);
+        
 
-//     useEffect(() => {
-//         userRef.current.focus();
-//     }, [])
+//         if (decodedToken) {
+//           // 从JWT中读取role
+//           const role = decodedToken.role;
+//           const id = decodedToken.id;
+          
+//           // 保存token和role到本地存储
+//           localStorage.setItem('token', token);
+//           localStorage.setItem('role', role);
 
-//     useEffect(() => {
-//         setErrMsg('');
-//     }, [user, pwd])
-
-//     const handleSubmit = async (e) => {
-//         e.preventDefault();
-
-//         try {
-//             const response = await axios.post(LOGIN_URL,
-//                 JSON.stringify({ user, pwd }),
-//                 {
-//                     headers: { 'Content-Type': 'application/json' },
-//                     withCredentials: true
-//                 }
-//             );
-//             console.log(JSON.stringify(response?.data));
-//             //console.log(JSON.stringify(response));
-//             const accessToken = response?.data?.accessToken;
-//             const roles = response?.data?.roles;
-//             setAuth({ user, pwd, roles, accessToken });
-//             setUser('');
-//             setPwd('');
-//             navigate(from, { replace: true });
-//         } catch (err) {
-//             if (!err?.response) {
-//                 setErrMsg('No Server Response');
-//             } else if (err.response?.status === 400) {
-//                 setErrMsg('Missing Username or Password');
-//             } else if (err.response?.status === 401) {
-//                 setErrMsg('Unauthorized');
-//             } else {
-//                 setErrMsg('Login Failed');
-//             }
-//             errRef.current.focus();
+//           // 如果饿角色为seller
+//           if (role === 'seller') {
+//             // 获取sellerid
+//             // 跳转到 SellerPage 页面
+//             Navigate(`/sellerpage`)
+//           } else {
+//             Navigate(`/`)
+//           }
+//         } else {
+//           setErrorMessage('无效的JWT');
 //         }
+//       } else {
+//         setErrorMessage(data.error);
+//       }
+//     } catch (error) {
+//       console.error('登录失败:', error);
+//       setErrorMessage('登录失败');
 //     }
+//   };
 
 //     return (
-
-//         <section>
-//             <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p>
-//             <h1>Sign In</h1>
-//             <form onSubmit={handleSubmit}>
-//                 <label htmlFor="username">Username:</label>
-//                 <input
-//                     type="text"
-//                     id="username"
-//                     ref={userRef}
-//                     autoComplete="off"
-//                     onChange={(e) => setUser(e.target.value)}
-//                     value={user}
-//                     required
-//                 />
-
-//                 <label htmlFor="password">Password:</label>
-//                 <input
-//                     type="password"
-//                     id="password"
-//                     onChange={(e) => setPwd(e.target.value)}
-//                     value={pwd}
-//                     required
-//                 />
-//                 <button>Sign In</button>
-//             </form>
-//             <p>
-//                 Need an Account?<br />
-//                 <span className="line">
-//                     <Link to="/register">Sign Up</Link>
-//                 </span>
-//             </p>
-//         </section>
-
-//     )
-// }
-
-// export default Login
+//       <div>
+//         <h2>登录</h2>
+//         <div>
+//           <label>用户名:</label>
+//           <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+//         </div>
+//         <div>
+//           <label>密码:</label>
+//           <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+//         </div>
+//         {errorMessage && <div>{errorMessage}</div>}
+//         <button onClick={handleLogin}>登录</button>
+//       </div>
+//     );
+//   }

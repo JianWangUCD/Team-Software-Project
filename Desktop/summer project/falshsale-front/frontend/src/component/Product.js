@@ -1,7 +1,7 @@
 import React from 'react'
 
-export default function Product(props) {
-  const {product} = props;
+export default function Product({ product }) {
+  // const {product} = props;
    
   
   return (
