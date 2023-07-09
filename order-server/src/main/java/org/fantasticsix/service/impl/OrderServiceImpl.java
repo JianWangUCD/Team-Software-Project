@@ -7,6 +7,7 @@ import org.fantasticsix.domain.Product;
 import org.fantasticsix.repository.OrderRepository;
 import org.fantasticsix.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -21,12 +22,12 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order createOrder(long productId, long userId) {
-        log.info("接收到{}号商品的下单请求,接下来调用商品微服务查询此商品信息",
+        log.info("Received an order request for product {}, then calling the product microservice to query this product information",
                 productId);
         //远程调用商品微服务,查询商品信息
         String url = "http://localhost:8081/api/flashsale/products/" + productId;
         Product product = restTemplate.getForObject(url, Product.class);
-        log.info("查询到{}号商品的信息,内容是:{}", productId,
+        log.info("The information of the product {} is found, the content is: {}", productId,
                 JSON.toJSONString(product));
         //创建订单并保存
         Order order = new Order();
@@ -34,7 +35,31 @@ public class OrderServiceImpl implements OrderService {
         order.setProductId(productId);
         order.setAmount(product.getPrice());
         orderRepository.save(order);
-        log.info("创建订单成功,订单信息为{}", JSON.toJSONString(order));
+        log.info("Create order successfully, the order information is {}", JSON.toJSONString(order));
+
+        // stock-1
+        updateProductStock(productId, order);
+
         return order;
+    }
+
+    public void updateProductStock(long productId, Order order) {
+        String url = "http://localhost:8081/api/flashsale/products/" + productId;
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        // 构建请求体
+        HttpEntity<Order> requestEntity = new HttpEntity<>(order, headers);
+
+        // 发送PUT请求
+        ResponseEntity<Void> response = restTemplate.exchange(url, HttpMethod.PUT, requestEntity, Void.class);
+        if (response.getStatusCode() == HttpStatus.OK) {
+            // 库存更新成功
+            log.info("Stock changed successfully");
+        } else {
+            // 库存更新失败
+            log.info("Stock changed unsuccessfully");
+        }
     }
 }
