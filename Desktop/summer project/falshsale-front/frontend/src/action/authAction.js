@@ -39,6 +39,7 @@ import {
         config
       )
       dispatch({ type: USER_LOGIN_SUCCESS, payload: data })
+      
       // 本地存储返回的信息，记录登陆状态和现在登陆的用户
       localStorage.setItem('userInfo', JSON.stringify(data))
 
@@ -52,6 +53,15 @@ import {
       })
     }
   }
+
+  //用户退出的action
+export const logout = () => (dispatch) => {
+  localStorage.removeItem('userInfo')
+  dispatch({ type: USER_LOGOUT })
+  dispatch({ type: USER_LIST_RESET })
+  dispatch({ type: USER_DETAILS_RESET })
+  document.location.href = '/login'
+}
 
 //   //卖家登录Action
 //   export const sellerLogin = (username, password) => async (dispatch) => {

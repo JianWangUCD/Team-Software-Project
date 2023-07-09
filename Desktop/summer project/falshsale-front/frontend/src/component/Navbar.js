@@ -1,7 +1,19 @@
 import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+
 import { NavLink } from 'react-router-dom';
+import { logout } from '../action/authAction';
 
 function Navbar() {
+    const dispatch = useDispatch()
+    const userLogin = useSelector((state) => state.userLogin)
+    const { userInfo } = userLogin
+
+    //退出函数
+    const logoutHandler = () => {
+    dispatch(logout())
+  }
+
     return (
         <div>
             <nav className="navbar navbar-expand-lg navbar-light bg-light py-3 sticky-top">
@@ -20,12 +32,24 @@ function Navbar() {
                             <NavLink className="nav-link" to="/products">Products</NavLink>
                         </li>
                     </ul>
-                    <div className="buttons text-center">
+                    { userInfo ? (
+                        <div className="buttons text-center">
+                            <button>{userInfo.username}</button>
+                        <button onClick={logoutHandler}>logout</button>
+                  </div>
+                    ) : (
+                        <div className="buttons text-center">
                         <NavLink to="/login" className="btn btn-outline-dark m-2"><i className="fa fa-sign-in-alt mr-1"></i> Login</NavLink>
                         <NavLink to="/register" className="btn btn-outline-dark m-2"><i className="fa fa-user-plus mr-1"></i> Register</NavLink>
+                    </div>
+                    
+                )}
+                    {userInfo && userInfo.role === "seller" && (
+                    <div className="buttons text-center">
                         <NavLink to="/addProduct" className="btn btn-outline-dark m-2"><i className="fa fa-user-plus mr-1"></i> addProduct</NavLink>
                         <NavLink to="/seller" className="btn btn-outline-dark m-2"><i className="fa fa-user-plus mr-1"></i> seller</NavLink>
                     </div>
+              )}
                 </div>
             </div>
         </nav>

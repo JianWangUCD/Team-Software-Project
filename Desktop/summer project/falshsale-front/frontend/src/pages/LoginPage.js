@@ -14,7 +14,7 @@ export default function LoginPage() {
     const [password, setPassword] = useState(""); // 用于保存密码
     
     const dispatch = useDispatch()
-    const redirect = location.search ? location.search.split('=')[1] : '/'
+    const redirect = location.state?.from || "/";
 
     
     // 返回获取的状态值
@@ -23,8 +23,11 @@ export default function LoginPage() {
 
   useEffect(() => {
     // 如果已经登陆，重新定向
-    if(userInfo){
-      navigate(redirect)}
+    if(userInfo && userInfo.role === "buyer"){
+      navigate(redirect)} 
+      if (userInfo && userInfo.role === "seller"){
+        navigate("/seller")
+      }
   }, [navigate,userInfo, redirect])
     // 登陆函数
     

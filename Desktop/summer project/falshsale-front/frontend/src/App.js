@@ -37,18 +37,15 @@ function App() {
             <Route path="/products" Component={ProductsPage} exact></Route>
 
             {/* accessed by seller */}
-            <Route element = {<RequireAuth />}>
-              <Route path="/seller/:id" Component={SellerPage} exact></Route>
-              <Route path="/seller/:id/addProduct" Component={AddProduct} exact/>
+              <Route path="/seller" Component={SellerPage} exact></Route>
+              <Route path="/addProduct" Component={AddProduct} exact/>
               <Route path="/seller/:id/editProduct" Component={ManageProduct} exact></Route>
               <Route path="/seller/:id/viewOrders" Component={SellerOrders} exact></Route>
-            </Route>
-
+            
             {/* accessed by buyer */}
-            <Route element = {<RequireAuth />}>
               <Route exact path="/checkout" Component={checkout} />
               <Route exact path="/user/orders" Component={BuyerOrders} />
-            </Route>
+            
             
           </Routes>
         </main>
