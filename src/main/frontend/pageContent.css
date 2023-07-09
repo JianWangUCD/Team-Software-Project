@@ -72,6 +72,9 @@ p{
 .item {
     display: flex;
 }
+.item{
+    display: flow;
+}
 
 
 
