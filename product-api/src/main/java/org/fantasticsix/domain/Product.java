@@ -3,7 +3,6 @@ package org.fantasticsix.domain;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
 @Table(name = "products")
@@ -19,6 +18,6 @@ public class Product {
     private String detail;
     private Double price;
     private Integer stock;
-    private Date saleStartTime;
-    private Date saleEndTime;
+//    private Date saleStartTime;
+//    private Date saleEndTime;
 }
