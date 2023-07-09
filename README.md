@@ -1,1 +1,1 @@
-Test how to use git to push and pull code.
+Frontend pages about login and logout.
