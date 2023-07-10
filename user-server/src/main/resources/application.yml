@@ -16,7 +16,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/flashsaleusers
     username: root
-    password: ucd21213011.
+    password: nz321z1231997
 
   jpa:
     show-sql: true
