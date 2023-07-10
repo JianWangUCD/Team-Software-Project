@@ -58,13 +58,16 @@ public class ProductController {
         return responseEntity;
     }
 
-    @PutMapping("/flashsale/products/{productId}")
+    @PutMapping("/flashsale/products/stock/{productId}")
     public ResponseEntity<Void> updateProductStock(@PathVariable long productId, @RequestBody Order order) {
         // 根据商品ID查询数据库获取商品信息
         Product product = productService.getProduct(productId);
 
         // 更新商品信息中的库存数量
-        product.setStock(product.getStock() - 1);
+        int currentStock = product.getStock();
+        if(currentStock - 1 >= 0)
+            currentStock--;
+        product.setStock(currentStock);
         productService.updateProduct(productId, product);
 
         // 返回更新结果

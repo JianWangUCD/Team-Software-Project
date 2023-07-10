@@ -77,7 +77,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     public void updateProductStock(long productId, Order order) {
-        String url = "http://localhost:8081/api/flashsale/products/" + productId;
+        String url = "http://localhost:8081/api/flashsale/products/stock/" + productId;
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
