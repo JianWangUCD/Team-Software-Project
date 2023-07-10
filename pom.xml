@@ -13,6 +13,10 @@
         <module>product-server</module>
         <module>order-api</module>
         <module>order-server</module>
+        <module>user-api</module>
+        <module>user-server</module>
+        <module>seller-api</module>
+        <module>seller-server</module>
     </modules>
 
     <!--父工程-->

@@ -4,12 +4,16 @@ import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.fantasticsix.domain.Order;
 import org.fantasticsix.domain.Product;
+import org.fantasticsix.exception.OrderNotFoundException;
 import org.fantasticsix.repository.OrderRepository;
 import org.fantasticsix.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -19,6 +23,35 @@ public class OrderServiceImpl implements OrderService {
     private OrderRepository orderRepository;
     @Autowired
     private RestTemplate restTemplate;
+
+    @Override
+    public List<Order> getAllOrders() {
+
+        List<Order> orders = orderRepository.findAll();
+
+        return orders;
+    }
+
+    @Override
+    public Order getOrder(long id) {
+        return orderRepository.findById(id).orElseThrow(() -> new OrderNotFoundException(id));
+    }
+
+    @Override
+    public void deleteOrder(long id) {
+        Optional<Order> order = orderRepository.findById(id);
+        if(order.isPresent()) {
+            orderRepository.deleteById(id);
+        } else {
+            throw new OrderNotFoundException(id);
+        }
+    }
+
+    @Override
+    public Order updateOrder(long id, Order order) {
+        Order orderUpdated = orderRepository.save(order);
+        return orderUpdated;
+    }
 
     @Override
     public Order createOrder(long productId, long userId) {
