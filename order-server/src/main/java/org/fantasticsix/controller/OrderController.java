@@ -54,6 +54,11 @@ public class OrderController {
         return responseEntity;
     }
 
+    @RequestMapping("/flashsale/stock-check")
+    public Boolean stockCheck(long productId){
+        return orderService.stockCheck(productId);
+    }
+
     @PostMapping("/flashsale/checkout")
     public Order createOrder(long productId, long userId) {
         return orderService.createOrder(productId, userId);

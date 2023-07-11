@@ -13,5 +13,7 @@ public interface OrderService {
 
     Order updateOrder(long id, Order order);
 
+    Boolean stockCheck(long productId);
+
     Order createOrder(long productId, long userId);
 }

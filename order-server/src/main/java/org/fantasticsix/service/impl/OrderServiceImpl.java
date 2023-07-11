@@ -60,6 +60,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public Boolean stockCheck(long productId) {
+        Product product = productFeignAPI.getProduct(productId);
+        return product.getStock() > 0;
+    }
+
+    @Override
     public Order createOrder(long productId, long userId) {
         log.info("Received an order request for product {}, then calling the product microservice to query this product information",
                 productId);
