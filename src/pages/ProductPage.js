@@ -39,7 +39,7 @@ export default function ProductPage() {
   const handleCheckout = async () => {
     try {
       if (userInfo){
-        if (userInfo.role === "customer") {
+        if (userInfo.role === "buyer") {
           
           const response = await axios.get(
             `${BASE_URL}/order-service/flashsale/stock-check`,
@@ -60,10 +60,12 @@ export default function ProductPage() {
             // // 进行一些成功提示或导航到订单详情页面等操作
             // navigate(`/product/${product.id}`)
         } else {
-          console.error('You are not a customer');
+          console.error('You are not a buyer');
           // <MessageBox>You are not a buyer</MessageBox>
         }
-      } else { navigate("/login")}
+      } else { 
+        navigate("/login", { state: { from: `/product/${id}` } });
+    }
     } catch (error) {
       console.error(error);
     }
