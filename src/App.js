@@ -13,10 +13,11 @@ import SellerPage from './pages/SellerPage';
 import AddProduct from './action/AddProduct';
 import RegisterPage from './pages/RegisterPage';
 import SellerEdit from './pages/SellerEdit';
-import checkout from './pages/checkout';
+import checkout from './pages/CheckoutPage';
 import BuyerOrders from './pages/BuyerOrders';
 import Footer from './component/Footer';
 import LoginPage from './pages/LoginPage';
+import CheckoutPage from './pages/CheckoutPage';
 
 
 
@@ -41,7 +42,7 @@ function App() {
               <Route path="/seller/:id/viewOrders" Component={SellerEdit} exact></Route>
             
             {/* accessed by buyer */}
-              <Route exact path="/checkout" Component={checkout} />
+              <Route exact path="/checkout" Component={CheckoutPage} />
               <Route exact path="/user/orders" Component={BuyerOrders} />
             
             

@@ -1,6 +1,71 @@
-import React from 'react'
+import axios from 'axios';
+import React, { useEffect, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom';
+import { BASE_URL } from '../api';
+import MessageBox from '../component/MessageBox';
 
-export default function checkout() {
+export default function CheckoutPage() {
+
+  const navigate = useNavigate();
+
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const userId = queryParams.get('userId');
+  const productId = queryParams.get('productId');
+
+  const [formValues, setFormValues] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    address: '',
+    address2: '',
+    country: '',
+    state: '',
+    zip: '',
+    ccName: '',
+    ccNumber: '',
+    ccExpiration: '',
+    ccCvv: ''
+  });
+
+  const [isFormFilled, setIsFormFilled] = useState(false);
+
+  const handleFormChange = event => {
+    const { id, value } = event.target;
+    setFormValues(prevState => ({
+      ...prevState,
+      [id]: value
+    }));
+  };
+
+  useEffect(() => {
+    // Update the disabled state of the button when form field values change
+    // Note: You can add additional checks or validations if needed
+    const isFilled = Object.values(formValues).every(value => value !== '');
+    setIsFormFilled(isFilled);
+  }, [formValues]);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    // Handle form submission
+    try{
+      const response = await axios.post(
+        `${BASE_URL}/order-service/flashsale/checkout`,
+        null,
+        {
+          params: {
+            productId: productId,
+            userId: userId
+          },
+        }
+      );
+      console.log("successful payment", response.data);
+      navigate(`/product/${productId}`);
+    }catch(error){
+      console.log("Error", error);
+    }
+    
+  };
 
   let totalItems = "items";
   let shipping = 50;
@@ -41,7 +106,7 @@ export default function checkout() {
               <h4 className="mb-0">Billing address</h4>
             </div>
             <div className="card-body">
-              <form className="needs-validation" novalidate>
+              <form className="needs-validation" onSubmit={handleSubmit}>
                 <div className="row g-3">
                   <div className="col-sm-6 my-1">
                     <label for="firstName" className="form-label">
@@ -52,9 +117,11 @@ export default function checkout() {
                       className="form-control"
                       id="firstName"
                       placeholder=""
-                      value=""
+                      value={formValues.firstName}
+                      onChange={handleFormChange}
                       required
                     />
+
                     <div className="invalid-feedback">
                       Valid first name is required.
                     </div>
@@ -69,7 +136,8 @@ export default function checkout() {
                       className="form-control"
                       id="lastName"
                       placeholder=""
-                      value=""
+                      value={formValues.lastName}
+                      onChange={handleFormChange}
                       required
                     />
                     <div className="invalid-feedback">
@@ -86,6 +154,8 @@ export default function checkout() {
                       className="form-control"
                       id="email"
                       placeholder="you@example.com"
+                      value={formValues.email}
+                      onChange={handleFormChange}
                       required
                     />
                     <div className="invalid-feedback">
@@ -103,6 +173,8 @@ export default function checkout() {
                       className="form-control"
                       id="address"
                       placeholder="1234 Main St"
+                      value={formValues.address}
+                      onChange={handleFormChange}
                       required
                     />
                     <div className="invalid-feedback">
@@ -120,6 +192,8 @@ export default function checkout() {
                       className="form-control"
                       id="address2"
                       placeholder="Apartment or suite"
+                      value={formValues.address2}
+                      onChange={handleFormChange}
                     />
                   </div>
 
@@ -130,7 +204,7 @@ export default function checkout() {
                     <br />
                     <select className="form-select" id="country" required>
                       <option value="">Choose...</option>
-                      <option>India</option>
+                      <option>China</option>
                     </select>
                     <div className="invalid-feedback">
                       Please select a valid country.
@@ -144,7 +218,7 @@ export default function checkout() {
                     <br />
                     <select className="form-select" id="state" required>
                       <option value="">Choose...</option>
-                      <option>Punjab</option>
+                      <option>Chongqing</option>
                     </select>
                     <div className="invalid-feedback">
                       Please provide a valid state.
@@ -160,6 +234,8 @@ export default function checkout() {
                       className="form-control"
                       id="zip"
                       placeholder=""
+                      value={formValues.zip}
+                      onChange={handleFormChange}
                       required
                     />
                     <div className="invalid-feedback">
@@ -174,14 +250,16 @@ export default function checkout() {
 
                 <div className="row gy-3">
                   <div className="col-md-6">
-                    <label for="cc-name" className="form-label">
+                    <label for="ccName" className="form-label">
                       Name on card
                     </label>
                     <input
                       type="text"
                       className="form-control"
-                      id="cc-name"
+                      id="ccName"
                       placeholder=""
+                      value={formValues.ccName}
+                      onChange={handleFormChange}
                       required
                     />
                     <small className="text-muted">
@@ -193,14 +271,16 @@ export default function checkout() {
                   </div>
 
                   <div className="col-md-6">
-                    <label for="cc-number" className="form-label">
+                    <label for="ccNumber" className="form-label">
                       Credit card number
                     </label>
                     <input
                       type="text"
                       className="form-control"
-                      id="cc-number"
+                      id="ccNumber"
                       placeholder=""
+                      value={formValues.ccNumber}
+                      onChange={handleFormChange}
                       required
                     />
                     <div className="invalid-feedback">
@@ -209,14 +289,16 @@ export default function checkout() {
                   </div>
 
                   <div className="col-md-3">
-                    <label for="cc-expiration" className="form-label">
-                      Expiration
+                    <label for="ccExpiration" className="form-label">
+                      expiration
                     </label>
                     <input
                       type="text"
                       className="form-control"
-                      id="cc-expiration"
+                      id="ccExpiration"
                       placeholder=""
+                      value={formValues.ccExpiration}
+                      onChange={handleFormChange}
                       required
                     />
                     <div className="invalid-feedback">
@@ -225,14 +307,16 @@ export default function checkout() {
                   </div>
 
                   <div className="col-md-3">
-                    <label for="cc-cvv" className="form-label">
+                    <label for="ccCvv" className="form-label">
                       CVV
                     </label>
                     <input
                       type="text"
                       className="form-control"
-                      id="cc-cvv"
+                      id="ccCvv"
                       placeholder=""
+                      value={formValues.ccCvv}
+                      onChange={handleFormChange}
                       required
                     />
                     <div className="invalid-feedback">
@@ -245,7 +329,9 @@ export default function checkout() {
 
                 <button
                   className="w-100 btn btn-primary "
-                  type="submit" disabled
+                  id = "payButton"
+                  type="submit"  
+                  // disabled={!isFormFilled}
                 >
                   Pay
                 </button>

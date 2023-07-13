@@ -12,8 +12,6 @@ export default function Register() {
         role: ""
   });
 
-  
-
   const { username, password, role } = user;
 
   const onInputChange = async (e) => {

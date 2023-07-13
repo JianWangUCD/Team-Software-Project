@@ -37,42 +37,39 @@ export default function ProductPage() {
   }
 
   const handleCheckout = async () => {
-    
     try {
       if (userInfo){
-        if (userInfo.role === "buyer") {
-          // repoinse = request `${BASE_URL}/order-service//flashsale/stock-check`
-          // if (reponse){navigate("/checkout")}(如何携带productId: product.id, userId: userInfo.id,)else{message(Sold out)}
-          const response = await axios.post(
-            `${BASE_URL}/order-service/flashsale/checkout`,
-            null,
+        if (userInfo.role === "customer") {
+          
+          const response = await axios.get(
+            `${BASE_URL}/order-service/flashsale/stock-check`,
             {
               params: {
-                productId: product.id,
-                userId: userInfo.id,
+                productId: product.id
               },
             }
           );
-          console.log('Order created:', response.data);
-          fetchProduct();
-          // 进行一些成功提示或导航到订单详情页面等操作
-          navigate(`/product/${product.id}`)
+            if (response.data){
+              // <MessageBox>You got the item</MessageBox>
+              navigate(`/checkout?userId=${userInfo.id}&productId=${product.id}`)
+            }else{
+              // <MessageBox>Sold out</MessageBox>
+              console.log("Sold out")
+            }          
+            // fetchProduct();
+            // // 进行一些成功提示或导航到订单详情页面等操作
+            // navigate(`/product/${product.id}`)
         } else {
-          console.error('You are not a buyer');
+          console.error('You are not a customer');
+          // <MessageBox>You are not a buyer</MessageBox>
         }
-      } else {
-        navigate("/login")
-        
-      }
-      
+      } else { navigate("/login")}
     } catch (error) {
       console.error(error);
     }
   };
 
   return (
-    
-    
     <div className="container my-5 py-2">
     <Link className = 'btn btn-dark my-3'  to='/products'> return </Link>
     <div className="row">
