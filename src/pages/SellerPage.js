@@ -2,18 +2,23 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useParams } from "react-router-dom";
 import { BASE_URL } from "../api";
+import { useSelector } from "react-redux";
 // import Navbar from '../component/Navbar'
 
 export default function SellerPage() {
+
+  // 返回获取的状态值
+  const userLogin = useSelector(state => state.userLogin)
+  const { userInfo } = userLogin
 
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
     loadProducts();
-  }, []);
+  });
 
   const loadProducts = async () => {
-    const result = await axios.get('http://localhost:9000/product-service/flashsale/products');
+    const result = await axios.get(`http://localhost:9000/product-service/flashsale/seller/${userInfo.id}/products`);
     setProducts(result.data);
   };
 
