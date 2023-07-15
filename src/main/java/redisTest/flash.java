@@ -16,16 +16,18 @@ public class flash {
 
     @RequestMapping("/deduct_stock")
     public String deductStock() {
-
-        int stock = Integer.parseInt(stringRedisTemplate.opsForValue().get("stock"));
-        if (stock > 0) {
-            int realStock = stock - 1;
-            stringRedisTemplate.opsForValue().set("stock", realStock + "");
-            System.out.println(realStock);
-        }else {
-            System.out.println("failed");
+        synchronized (this) {
+            int stock = Integer.parseInt(stringRedisTemplate.opsForValue().get("stock"));
+            if (stock > 0) {
+                int realStock = stock - 1;
+                stringRedisTemplate.opsForValue().set("stock", realStock + "");
+                System.out.println(realStock);
+            } else {
+                System.out.println("failed");
+            }
+            return "end";
         }
-        return "end";
+
     }
 
 }
