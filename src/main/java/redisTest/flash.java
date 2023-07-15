@@ -16,7 +16,11 @@ public class flash {
 
     @RequestMapping("/deduct_stock")
     public String deductStock() {
-        synchronized (this) {
+        String LockKey = "LockKey";
+        Boolean result = stringRedisTemplate.opsForValue().setIfAbsent(LockKey, "111");
+        if (!result) {
+            return "error";
+        }
             int stock = Integer.parseInt(stringRedisTemplate.opsForValue().get("stock"));
             if (stock > 0) {
                 int realStock = stock - 1;
@@ -25,9 +29,10 @@ public class flash {
             } else {
                 System.out.println("failed");
             }
+            stringRedisTemplate.delete(LockKey);
             return "end";
         }
 
     }
 
-}
+
