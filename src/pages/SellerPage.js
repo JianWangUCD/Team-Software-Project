@@ -3,6 +3,7 @@ import axios from "axios";
 import { Link, useParams } from "react-router-dom";
 import { BASE_URL } from "../api";
 import { useSelector } from "react-redux";
+import { format } from 'date-fns';
 // import Navbar from '../component/Navbar'
 
 export default function SellerPage() {
@@ -53,8 +54,8 @@ export default function SellerPage() {
                 <td>{product.price}</td>
                 <td>{product.stock}</td>
                 <td>{product.detail}</td>
-                <td>{product.saleStartTime}</td>
-                <td>{product.saleEndTime}</td>
+                <td>{format(new Date(product.saleStartTime), 'yyyy-MM-dd HH:mm:ss')}</td>
+                <td>{format(new Date(product.saleEndTime), 'yyyy-MM-dd HH:mm:ss')}</td>
                 <td>
               
                   <Link

@@ -1,4 +1,5 @@
-import React from 'react'
+import React from 'react';
+import { format } from 'date-fns';
 
 export default function Product({ product }) {
   // const {product} = props;
@@ -18,7 +19,12 @@ export default function Product({ product }) {
                   </h5>
                   <ul className="list-group list-group-flush">
                   <li className="list-group-item lead">$ {product.price}</li>
-                  <li className="list-group-item lead">sale time: {product.saleStartTime} - {product.saleStartTime}</li>
+                  <li className="list-group-item lead">
+                    sale start: {format(new Date(product.saleStartTime), 'yyyy-MM-dd HH:mm:ss')}
+                  </li>
+                  <li className="list-group-item lead">
+                    sale end: {format(new Date(product.saleEndTime), 'yyyy-MM-dd HH:mm:ss')}
+                  </li>
                 </ul>
                   
                 </div>

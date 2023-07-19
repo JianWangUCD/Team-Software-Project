@@ -6,6 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import MessageBox from '../component/MessageBox';
 import { BASE_URL } from '../api';
+import { format } from 'date-fns';
 
 
 export default function ProductPage() {
@@ -91,7 +92,7 @@ export default function ProductPage() {
 
         <h3 className="display-6  my-4">${product.price}</h3>
         <p className="lead">{product.detail}</p>
-        <h3 className="display-6  my-4">Sale Start: {product.saleStartTime}</h3>
+        <h3 className="lead">Sale Start: {format(new Date(product.saleStartTime), 'yyyy-MM-dd HH:mm:ss')}</h3>
         
         <p className="lead">Stock: {product.stock}</p>
         <button
