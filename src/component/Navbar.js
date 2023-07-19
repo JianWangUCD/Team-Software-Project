@@ -31,6 +31,9 @@ function Navbar() {
                         <li className="nav-item">
                             <NavLink className="nav-link" to="/products">Products</NavLink>
                         </li>
+                        <li className="nav-item">
+                            <NavLink className="nav-link" to="/todaysSale">Today's Sale</NavLink>
+                        </li>
                     </ul>
                     { userInfo ? (
                         <div className="buttons text-center">

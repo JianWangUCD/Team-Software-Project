@@ -12,6 +12,7 @@ export default function ProductPage() {
   const navigate = useNavigate();
   const { id } = useParams();
   const [product, setProduct] = useState(null);
+  const [isSaleStarted, setIsSaleStarted] = useState(false);
 
       // 返回获取的状态值
       const userLogin = useSelector( state  => state.userLogin)
@@ -21,6 +22,7 @@ export default function ProductPage() {
         try {
           const response = await axios.get(`http://localhost:9000/product-service/flashsale/products/${id}`);
           setProduct(response.data);
+          setIsSaleStarted(Date.now() >= new Date(response.data.saleStartTime));
         } catch (error) {
           console.error(error);
         }
@@ -89,12 +91,14 @@ export default function ProductPage() {
 
         <h3 className="display-6  my-4">${product.price}</h3>
         <p className="lead">{product.detail}</p>
-        {/* <h3 className="display-6  my-4">Sale Start: {product.saleStartTime}</h3> */}
+        <h3 className="display-6  my-4">Sale Start: {product.saleStartTime}</h3>
+        
         <p className="lead">Stock: {product.stock}</p>
         <button
-          className="btn btn-outline-dark" 
-          onClick={handleCheckout}
-        >
+            className="btn btn-outline-dark"
+            onClick={handleCheckout}
+            disabled={!isSaleStarted}
+          >
           Checkout
         </button>
       </div>

@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
+import { format } from 'date-fns';
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL } from "../api";
 
 const SellerEdit = () => {
   let navigate = useNavigate();
-
+  
   const { id } = useParams();
+
   const [product, setProduct] = useState({
     productName: "",
     img: "",
@@ -17,12 +19,15 @@ const SellerEdit = () => {
     saleEndTime: ""
   });
 
+  
+
   useEffect(() => {
     loadProduct();
   }, []);
 
   const loadProduct = async () => {
     const response = await axios.get(`${BASE_URL}/product-service/flashsale/products/${id}`);
+    // const product = response.data;
     setProduct(response.data);
   };
 
@@ -33,10 +38,27 @@ const SellerEdit = () => {
     });
   };
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   await axios.put(`${BASE_URL}/product-service/flashsale/products/${id}`, product);
+  //   // 在更新后导航回SellerPage页面或其他适当的操作
+  //   navigate("/seller");
+  // };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await axios.put(`${BASE_URL}/product-service/flashsale/products/${id}`, product);
-    // 在更新后导航回SellerPage页面或其他适当的操作
+
+    const formattedSaleStartTime = format(new Date(product.saleStartTime), "yyyy-MM-dd'T'HH:mm:ss");
+  const formattedSaleEndTime = format(new Date(product.saleEndTime), "yyyy-MM-dd'T'HH:mm:ss");
+
+  const updatedProduct = {
+    ...product,
+    saleStartTime: formattedSaleStartTime,
+    saleEndTime: formattedSaleEndTime
+  };
+
+    await axios.put(`${BASE_URL}/product-service/flashsale/products/${id}`, updatedProduct);
     navigate("/seller");
   };
 
@@ -55,6 +77,7 @@ const SellerEdit = () => {
             name="productName"
             value={product.productName}
             onChange={handleChange}
+            // onChange={(e) => setProductName(e.target.value)}
           />
         </div>
         <div className="mb-3">
@@ -68,6 +91,7 @@ const SellerEdit = () => {
             name="img"
             value={product.img}
             onChange={handleChange}
+            // onChange={(e) => setImg(e.target.value)}
           />
         </div>
         <div className="mb-3">
@@ -81,6 +105,7 @@ const SellerEdit = () => {
             name="price"
             value={product.price}
             onChange={handleChange}
+            // onChange={(e) => setPrice(e.target.value)}
           />
         </div>
         <div className="mb-3">

@@ -3,6 +3,9 @@ import { Link, useNavigate } from 'react-router-dom'
 import axios from "axios";
 import { BASE_URL } from '../api';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+
 
 export default function Register() {
   let navigate = useNavigate();
@@ -46,6 +49,7 @@ export default function Register() {
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
+  
 
 
 
@@ -75,6 +79,7 @@ export default function Register() {
                 <label htmlFor="password" className="form-label">
                   password
                 </label>
+                <div className="input-group">
                 <input
                   type={showPassword ? "text" : "password"}
                   className="form-control"
@@ -83,13 +88,16 @@ export default function Register() {
                   value={password}
                   onChange={(e) => onInputChange(e)}
                 />
-                <button
-                  type="button"
-                  className="btn btn-outline-secondary"
-                  onClick={toggleShowPassword}
-                >
-                  {showPassword ? "Hide" : "Show"}
-                </button>
+                <div className="input-group-append">
+      <button
+        type="button"
+        className="btn btn-outline-secondary"
+        onClick={toggleShowPassword}
+      >
+        <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+      </button>
+    </div>
+  </div>
               </div>
 
               <div className="mb-3">

@@ -3,6 +3,7 @@ import React from 'react'
 
 import Home from '../component/Home';
 import ProductsPage from './ProductsPage';
+import TodaysSale from './TodaysSale';
 
 
 export default function HomePage() {
@@ -10,7 +11,8 @@ export default function HomePage() {
   return (
     <div>
       <Home />
-      <ProductsPage /> 
+      <h2> Today's Sales</h2>
+      <TodaysSale /> 
     </div>
   )
 }

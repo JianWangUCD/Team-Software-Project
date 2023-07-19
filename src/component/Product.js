@@ -18,7 +18,7 @@ export default function Product({ product }) {
                   </h5>
                   <ul className="list-group list-group-flush">
                   <li className="list-group-item lead">$ {product.price}</li>
-                  {/* <li className="list-group-item lead">sale time: {product.saleStartTime} - {product.saleStartTime}</li> */}
+                  <li className="list-group-item lead">sale time: {product.saleStartTime} - {product.saleStartTime}</li>
                 </ul>
                   
                 </div>

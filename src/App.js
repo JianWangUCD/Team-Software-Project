@@ -18,6 +18,7 @@ import BuyerOrders from './pages/BuyerOrders';
 import Footer from './component/Footer';
 import LoginPage from './pages/LoginPage';
 import CheckoutPage from './pages/CheckoutPage';
+import TodaysSale from './pages/TodaysSale';
 
 
 
@@ -34,6 +35,7 @@ function App() {
             <Route  path="/register" Component={RegisterPage} exact/>
             <Route path="/product/:id" Component={ProductPage} exact></Route>
             <Route path="/products" Component={ProductsPage} exact></Route>
+            <Route path="/todaysSale" Component={TodaysSale} exact></Route>
 
             {/* accessed by seller */}
               <Route path="/seller" Component={SellerPage} exact></Route>

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { format } from 'date-fns';
 import axios from "axios";
 
 import { Link, useNavigate } from "react-router-dom";
@@ -7,38 +8,37 @@ import { BASE_URL } from "../api";
 
 export default function AddProduct() {
   let navigate = useNavigate();
-  const [sellerId, setSellerId] = useState();
   const [productName, setProductName] = useState();
   const [img, setImg] = useState();
   const [detail, setDetail] = useState();
   const [price, setPrice] = useState();
   const [stock, setStock] = useState();
-  // const [saleStartTime, setSaleStartTime] = useState();
-  // const [saleEndTime, setSaleEndTime] = useState();
+  const [saleStartTime, setSaleStartTime] = useState(new Date());
+  const [saleEndTime, setSaleEndTime] = useState(new Date());
   
-    // 返回获取的状态值获取登陆者id和role
+  // 返回获取的状态值获取登陆者id和role
   //获取登录成功后的用户信息
   const userInfo = useSelector(state => state.userLogin.userInfo);
   
-  
-  
-
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    
+    const formattedSaleStartTime = format(saleStartTime, "yyyy-MM-dd'T'HH:mm:ss");
+    const formattedSaleEndTime = format(saleEndTime, "yyyy-MM-dd'T'HH:mm:ss");
 
     const product = {
       sellerId:userInfo.id,
-      productName,
-      img,
-      detail,
-      price,
-      stock,
-      // saleStartTime,
-      // saleEndTime,
+      productName: productName,
+      img: img,
+      detail: detail,
+      price: price,
+      stock: stock,
+      saleStartTime: formattedSaleStartTime,
+      saleEndTime: formattedSaleEndTime,
     };
 
+
+    console.log("Product: ", product)
     await axios.post(`${BASE_URL}/product-service/flashsale/products` , product);
     navigate("/seller");
   };
@@ -118,7 +118,7 @@ export default function AddProduct() {
                 onChange={(e) => setStock(e.target.value)}
               />
             </div>
-            {/* <div className="mb-3">
+            <div className="mb-3">
               <label htmlFor="saleStartTime" className="form-label">
               saleStartTime
               </label>
@@ -128,10 +128,7 @@ export default function AddProduct() {
                 placeholder="Enter sale Start Time"
                 name="saleStartTime"
                 value={saleStartTime ? saleStartTime.toISOString().slice(0, 16) : ''}
-                onChange={(e) => setSaleStartTime(e)}
-                // onBlur={() => onTimeConfirm("saleStartTime", new Date(document.getElementsByName("saleStartTime")[0].value))}
-                // value={saleStartTime}
-                // onChange={(e) => onInputChange(e)}
+                onChange={(e) => setSaleStartTime(new Date(e.target.value))}
               />
             </div>
             <div className="mb-3">
@@ -144,12 +141,9 @@ export default function AddProduct() {
                 placeholder="Enter sale End Time"
                 name="saleEndTime"
                 value={saleEndTime ? saleEndTime.toISOString().slice(0, 16) : ''}
-                onChange={(e) => setSaleEndTime(e)}
-                // onBlur={() => onTimeConfirm("saleEndTime", new Date(document.getElementsByName("saleEndTime")[0].value))}
-                // value={saleEndTime}
-                // onChange={(e) => onInputChange(e)}
+                onChange={(e) => setSaleEndTime(new Date(e.target.value))}
               />
-            </div> */}
+            </div>
             <button type="submit" className="btn btn-outline-primary">
               Submit
             </button>
