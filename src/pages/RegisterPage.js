@@ -19,6 +19,7 @@ export default function Register() {
   const { username, password, role } = user;
   const [showPassword, setShowPassword] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [responseMessage, setResponseMessage] = useState('');
 
   const onInputChange = async (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
@@ -32,18 +33,33 @@ export default function Register() {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    if (!validatePassword()) {
-      alert(
-        "Password must be at least 8 characters long and contain at least one special character, one letter, and one digit."
-      );
-      return;
+    console.log("User: ", user)
+    
+      if (!validatePassword()) {
+        alert(
+          "Password must be at least 8 characters long and contain at least one special character, one letter, and one digit."
+        );
+        return;
+      }
+      if (password !== confirmPassword) {
+        alert("Passwords do not match");
+        return;
+      }
+
+      try{
+      const response = await axios.post(`${BASE_URL}/user-service/register`, user);
+      setResponseMessage(response.data);
+      navigate("/login");
+    }catch (error) {
+      if (error.response) {
+        setResponseMessage(error.response.data);
+      } else {
+        setResponseMessage('Registration failed');
+      }
+      alert(responseMessage);
+
     }
-    if (password !== confirmPassword) {
-      alert("Passwords do not match");
-      return;
-    }
-    await axios.post(`${BASE_URL}/user-service/register`, user);
-    navigate("/login");
+    
   };
 
   const toggleShowPassword = () => {

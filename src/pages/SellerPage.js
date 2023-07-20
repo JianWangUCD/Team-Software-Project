@@ -16,7 +16,7 @@ export default function SellerPage() {
 
   useEffect(() => {
     loadProducts();
-  });
+}, []); // 空数组作为依赖项
 
   const loadProducts = async () => {
     const result = await axios.get(`http://localhost:9000/product-service/flashsale/seller/${userInfo.id}/products`);

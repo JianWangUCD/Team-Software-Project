@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Modal, Button } from 'react-bootstrap';
 import { format } from 'date-fns';
 import axios from "axios";
 
@@ -15,6 +16,46 @@ export default function AddProduct() {
   const [stock, setStock] = useState();
   const [saleStartTime, setSaleStartTime] = useState(new Date());
   const [saleEndTime, setSaleEndTime] = useState(new Date());
+
+
+  const [showModal, setShowModal] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const handleShowModal = () => {
+    setShowModal(true);
+  };
+
+  const handleHideModal = () => {
+    setShowModal(false);
+  };
+
+  const handleImageChange = (event) => {
+    setSelectedImage(event.target.files[0]);
+  };
+
+  const handleUploadImage = async (event) => {
+    event.preventDefault();
+
+    try {
+      const formData = new FormData();
+      formData.append('file', selectedImage);
+      const response = await axios.post(`${BASE_URL}/product-service/flashsale/products/uploadImage`, formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+      );
+      const imgPath = response.data;
+      setImg(imgPath);
+    } catch (error) {
+      console.error('Error while uploading image: ', error);
+    }
+
+    handleHideModal();
+  };
+
+
+ 
   
   // 返回获取的状态值获取登陆者id和role
   //获取登录成功后的用户信息
@@ -78,7 +119,11 @@ export default function AddProduct() {
                 value={img}
                 onChange={(e) => setImg(e.target.value)}
               />
+              <Button className="ms-2" variant="primary" onClick={handleShowModal}>
+                  Select Image
+              </Button>
             </div>
+
             <div className="mb-3">
               <label htmlFor="Detail" className="form-label">
               Detail
@@ -153,6 +198,32 @@ export default function AddProduct() {
           </form>
         </div>
       </div>
+
+      <Modal show={showModal} onHide={handleHideModal}>
+      <Modal.Header closeButton>
+        <Modal.Title>Select Image</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <form onSubmit={handleUploadImage}>
+          <div className="mb-3">
+            <label htmlFor="imageUpload" className="form-label">
+              Choose an image:
+            </label>
+            <input
+              type="file"
+              className="form-control"
+              id="imageUpload"
+              onChange={handleImageChange}
+            />
+          </div>
+          <button type="submit" className="btn btn-primary">
+            Upload
+          </button>
+        </form>
+      </Modal.Body>
+    </Modal>
     </div>
+
+    
   )
 }
