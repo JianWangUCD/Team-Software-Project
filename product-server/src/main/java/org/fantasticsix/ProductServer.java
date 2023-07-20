@@ -11,8 +11,4 @@ public class ProductServer {
         SpringApplication.run(ProductServer.class,args);
     }
 
-//    @Bean
-//    public RestTemplate restTemplate(){
-//        return new RestTemplate();
-//    }
 }

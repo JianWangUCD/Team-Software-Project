@@ -20,7 +20,7 @@ public interface ProductService {
 
     Product createProduct(Product productRequest);
 
-    String uploadImage(Long productId, MultipartFile file) throws IOException;
+    String uploadImage(MultipartFile file) throws IOException;
 
 //    void uploadImage(Long productId, MultipartFile file) throws IOException;
 

@@ -80,12 +80,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
 
-
-
-
-
     @Override
-    public String uploadImage(Long productId, MultipartFile file) throws IOException {
+    public String uploadImage(MultipartFile file) throws IOException {
         // Check if the upload directory exists, create it if not
         if (!Files.exists(Paths.get(uploadDirectory))) {
             Files.createDirectories(Paths.get(uploadDirectory));
@@ -99,13 +95,8 @@ public class ProductServiceImpl implements ProductService {
         Files.copy(file.getInputStream(), targetPath);
 
         // Return the relative path to the uploaded image
-        String imgPath = "/Users/junjieren/Desktop/ucd" + fileName;
+        String imgPath = "/images/" + fileName;
 
-        // Update the product's image path in the database
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new IllegalArgumentException("Product not found with ID: " + productId));
-        product.setImg(imgPath);
-        productRepository.save(product);
 
         return imgPath;
     }

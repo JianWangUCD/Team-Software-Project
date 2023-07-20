@@ -113,19 +113,14 @@ public class ProductController {
 
     @PostMapping("/flashsale/products/uploadImage")
     public ResponseEntity<String> uploadImage(
-            @RequestParam("file") MultipartFile file,
-            @RequestParam("productId") Long productId
+            @RequestParam("file") MultipartFile file
     ) {
         try {
-            String imgPath = productService.uploadImage(productId, file);
+            String imgPath = productService.uploadImage(file);
             return ResponseEntity.ok(imgPath);
         } catch (IOException e) {
             log.error("Error while uploading image: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-
-
-
-
 }
