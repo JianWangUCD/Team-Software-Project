@@ -61,7 +61,7 @@ export default function LoginPage() {
               <div class="my-3">
                 <label for="floatingPassword display-4">Password</label>
                 <input
-                  type={"text"}
+                  type={"password"}
                   class="form-control"
                   placeholder="Password"
                   id = "password"

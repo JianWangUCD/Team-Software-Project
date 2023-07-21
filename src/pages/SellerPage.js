@@ -4,7 +4,6 @@ import { Link, useParams } from "react-router-dom";
 import { BASE_URL } from "../api";
 import { useSelector } from "react-redux";
 import { format } from 'date-fns';
-// import Navbar from '../component/Navbar'
 
 export default function SellerPage() {
 

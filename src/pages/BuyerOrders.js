@@ -63,17 +63,6 @@ export default function BuyerOrders() {
         const ordersData = ordersResponse.data;
         setOrders(ordersData);
         console.log("Orders:", ordersData);
-
-        const productIds = ordersData.map((order) => order.productId);
-
-        const productsResponse = await Promise.all(
-          productIds.map((productId) =>
-            axios.get(`${BASE_URL}/product-service/flashsale/products/${productId}`)
-          )
-        );
-        const productsData = productsResponse.map((response) => response.data);
-        setProducts(productsData);
-        console.log("Products:", productsData);
       } catch (error) {
         console.error('Error fetching order history:', error);
       }
@@ -102,28 +91,28 @@ export default function BuyerOrders() {
             <thead>
               <tr>
                 <th scope="col">product name</th>
-                <th scope="col">Image</th>
+                <th scope="col"></th>
                 <th scope="col">price</th>
+                <th scope="col">order time</th>
+
               </tr>
             </thead>
             <tbody>
               {orders.map((order) => {
-                const product = products.find(
-                  (product) => product.productId === order.productId
-                );
 
                 return (
                   <tr key={order.id}>
-                    <td>{product.productName}</td>
+                    <td>{order.productName}</td>
                     <td>
                       <img
                         className="card-img-top p-3"
-                        src={product.img}
-                        alt={product.productName}
-                        style={{ width: '200px', height: '200px' }}
+                        src={order.img}
+                        alt={order.productName}
+                        style={{ width: '100px', height: '100px' }}
                       />
                     </td>
                     <td>{order.amount}</td>
+                    <td>{order.orderTime}</td>
                     <td>
                       <button
                         className="btn btn-danger mx-2"
