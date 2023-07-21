@@ -15,29 +15,19 @@ export default function ProductPage() {
   const [product, setProduct] = useState(null);
   const [isSaleStarted, setIsSaleStarted] = useState(false);
 
-      // 返回获取的状态值
-      const userLogin = useSelector( state  => state.userLogin)
-      const { userInfo } = userLogin
+  // 返回获取的状态值
+  const userLogin = useSelector( state  => state.userLogin)
+  const { userInfo } = userLogin
 
-      const fetchProduct = async () => {
-        try {
-          const response = await axios.get(`http://localhost:9000/product-service/flashsale/products/${id}`);
-          setProduct(response.data);
-          setIsSaleStarted(Date.now() >= new Date(response.data.saleStartTime));
-        } catch (error) {
-          console.error(error);
-        }
-      };
-
-  useEffect(() => {
-    fetchProduct();
-  }, [id]);
-
-  
-
-  if (!product){
-    return <div> Product Not Found</div>;
-  }
+  const fetchProduct = async () => {
+    try {
+      const response = await axios.get(`http://localhost:9000/product-service/flashsale/products/${id}`);
+      setProduct(response.data);
+      setIsSaleStarted(Date.now() >= new Date(response.data.saleStartTime));
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const handleCheckout = async () => {
     try {
@@ -74,6 +64,35 @@ export default function ProductPage() {
     }
   };
 
+
+
+  useEffect(() => {
+    fetchProduct();
+  }, [id]);
+
+  const checkSaleStatus = () => {
+    if (product) {
+      setIsSaleStarted(Date.now() >= new Date(product.saleStartTime));
+    }
+  };
+
+  useEffect(() => {
+    // Check the sale status initially when the component mounts
+    checkSaleStatus();
+
+    // Set an interval to check the sale status every second (or adjust the interval as needed)
+    const interval = setInterval(checkSaleStatus, 1000);
+
+    // Clean up the interval when the component unmounts to avoid memory leaks
+    return () => clearInterval(interval);
+  }, [product]); // Add "product" as a dependency for the second useEffect hook
+
+  
+  if (!product){
+    return <div> Product Not Found</div>;
+  }
+
+  
   return (
     <div className="container my-5 py-2">
     <Link className = 'btn btn-dark my-3'  to='/products'> return </Link>
