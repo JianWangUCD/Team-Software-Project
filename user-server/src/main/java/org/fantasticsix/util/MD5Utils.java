@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 public class MD5Utils {
     private final static String HEX_NUMS_STR = "0123456789ABCDEF";
-    private final static Integer SALT_LENGTH = 12;
+    private final static Integer SALT_LENGTH = 8;
 
     /**
      * 将16进制字符串转换成数组
