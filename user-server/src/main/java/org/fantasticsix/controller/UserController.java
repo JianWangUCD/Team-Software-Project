@@ -2,6 +2,7 @@ package org.fantasticsix.controller;
 
 import org.fantasticsix.domain.User;
 import org.fantasticsix.service.UserService;
+import org.fantasticsix.util.MD5Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
 
     @GetMapping("/flashsale/users")
     public List<User> getAllUsers() {
@@ -73,6 +75,8 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody User user) {
         try {
+//            String pwd = user.getPassword();
+            user.setPassword(MD5Utils.getEncryptedPwd(user.getPassword()));
             User registeredUser = userService.register(user);
             return ResponseEntity.ok("注册成功");
         } catch (IllegalArgumentException e) {

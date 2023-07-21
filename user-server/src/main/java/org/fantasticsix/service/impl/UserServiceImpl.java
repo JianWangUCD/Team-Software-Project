@@ -5,6 +5,7 @@ import org.fantasticsix.exception.UserNotFoundException;
 import org.fantasticsix.repository.UserRepository;
 import org.fantasticsix.service.UserService;
 import org.fantasticsix.util.JwtTokenUtil;
+import org.fantasticsix.util.MD5Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,7 +82,7 @@ public class UserServiceImpl implements UserService {
     public Map<String, String> login(String username, String password) {
         // 验证用户名和密码
         User user = userRepository.findByUsername(username);
-        if (user == null || !user.getPassword().equals(password)) {
+        if (user == null || !MD5Utils.validpassword(password, user.getPassword())) {
             throw new IllegalArgumentException("用户名或密码错误");
         }
 
