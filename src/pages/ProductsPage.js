@@ -7,6 +7,7 @@ import MessageBox from '../component/MessageBox';
 import { useDispatch, useSelector } from 'react-redux';
 import { listProducts } from '../action/productAction';
 import { isAfter, startOfDay, endOfDay } from 'date-fns';
+import { Container } from 'react-bootstrap';
 
 
 
@@ -22,6 +23,7 @@ export default function ProductsPage() {
 
   return (
     <div>
+      <Container>
       {
         loading ? (<LoadingBox></LoadingBox>)
         :
@@ -38,7 +40,7 @@ export default function ProductsPage() {
               ))}
         </div>)
       }
-      
+      </Container>
     </div>
   )
 }

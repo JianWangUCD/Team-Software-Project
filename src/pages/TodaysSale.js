@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import Product from '../component/Product'
-// import data from '../data';
-import axios from 'axios';
 import LoadingBox from '../component/LoadingBox';
 import MessageBox from '../component/MessageBox';
 import { useDispatch, useSelector } from 'react-redux';
 import { listProducts } from '../action/productAction';
 import { isToday, startOfDay } from 'date-fns';
+import { Container } from 'react-bootstrap';
 
 export default function TodaysSale() {
 
@@ -20,6 +19,7 @@ export default function TodaysSale() {
   
     return (
       <div>
+        <Container>
         {
           loading ? (<LoadingBox></LoadingBox>)
           :
@@ -27,7 +27,6 @@ export default function TodaysSale() {
           :
           (
           <div className="row center">
-            
               {
                 products
                 .filter((product) => isToday(startOfDay(new Date(product.saleStartTime))))
@@ -37,7 +36,7 @@ export default function TodaysSale() {
                 ))}
           </div>)
         }
-        
+        </Container>
       </div>
     )
   }
