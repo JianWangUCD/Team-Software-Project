@@ -14,6 +14,7 @@ export default function ProductPage() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [isSaleStarted, setIsSaleStarted] = useState(false);
+  const [countdown, setCountdown] = useState(null);
 
   // 返回获取的状态值
   const userLogin = useSelector( state  => state.userLogin)
@@ -64,8 +65,6 @@ export default function ProductPage() {
     }
   };
 
-
-
   useEffect(() => {
     fetchProduct();
   }, [id]);
@@ -76,16 +75,45 @@ export default function ProductPage() {
     }
   };
 
+  
+
   useEffect(() => {
+
+    // 计算并更新倒计时时间
+    const calculateCountdown = () => {
+      if (product && !isSaleStarted) {
+        const now = new Date().getTime();
+        const saleStartTime = new Date(product.saleStartTime).getTime();
+        const timeDifference = saleStartTime - now;
+
+        if (timeDifference > 0) {
+          const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+          const hours = Math.floor(
+            (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+          );
+          const minutes = Math.floor(
+            (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
+          );
+          const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+
+          setCountdown({ days, hours, minutes, seconds });
+        }
+      }
+    };
+
+    // 计算倒计时初始值
+    calculateCountdown();
+
     // Check the sale status initially when the component mounts
     checkSaleStatus();
 
     // Set an interval to check the sale status every second (or adjust the interval as needed)
-    const interval = setInterval(checkSaleStatus, 1000);
+    const interval1 = setInterval(checkSaleStatus, 1000);
+    const interval2 = setInterval(calculateCountdown, 1000);
 
     // Clean up the interval when the component unmounts to avoid memory leaks
-    return () => clearInterval(interval);
-  }, [product]); // Add "product" as a dependency for the second useEffect hook
+    return () => clearInterval(interval1, interval2);
+  }, [product, isSaleStarted]); // Add "product" as a dependency for the second useEffect hook
 
   
   if (!product){
@@ -111,9 +139,13 @@ export default function ProductPage() {
 
         <h3 className="display-6  my-4">${product.price}</h3>
         <p className="lead">{product.detail}</p>
-        <h3 className="lead">Sale Start: {format(new Date(product.saleStartTime), 'yyyy-MM-dd HH:mm:ss')}</h3>
+        {/* <h3 className="lead">Sale Start: {format(new Date(product.saleStartTime), 'yyyy-MM-dd HH:mm:ss')}</h3> */}
         
         <p className="lead">Stock: {product.stock}</p>
+        <p className="lead">
+              Sale starts in: {countdown.days} days, {countdown.hours} hours,{' '}
+              {countdown.minutes} minutes, {countdown.seconds} seconds
+            </p>
         <button
             className="btn btn-outline-dark"
             onClick={handleCheckout}
@@ -121,6 +153,22 @@ export default function ProductPage() {
           >
           Checkout
         </button>
+        {/* {isSaleStarted ? (
+          <button
+            className="btn btn-outline-dark"
+            onClick={handleCheckout}
+            disabled={!isSaleStarted}
+          >
+            Checkout
+          </button>
+        ) : (
+          countdown && (
+            <p className="lead">
+              Sale starts in: {countdown.days} days, {countdown.hours} hours,{' '}
+              {countdown.minutes} minutes, {countdown.seconds} seconds
+            </p>
+          )
+        )} */}
       </div>
     </div>
   </div>
