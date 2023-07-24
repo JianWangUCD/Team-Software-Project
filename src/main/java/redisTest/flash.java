@@ -20,35 +20,25 @@ public class flash {
 
     @RequestMapping("/deduct_stock")
     public String deductStock() {
-        String LockKey = "LockKey";
-        //String ClientID = UUID.randomUUID().toString(); //Thread ID
-        RLock rLock = redisson.getLock(LockKey);
+        RLock rLock = redissonClient.getLock("id" + productId);
         try {
-            //Boolean result = stringRedisTemplate.opsForValue().setIfAbsent(LockKey, "111");
-            //stringRedisTemplate.expire(LockKey, 30, TimeUnit.SECONDS);
-            //Boolean result = stringRedisTemplate.opsForValue().setIfAbsent(LockKey, ClientID, 10, TimeUnit.SECONDS);
-
-            //if (!result) {
-            //    return "error";
-            //}
-            rLock.lock(); //
-            int stock = Integer.parseInt(stringRedisTemplate.opsForValue().get("stock"));
-            if (stock > 0) {
-                int realStock = stock - 1;
-                stringRedisTemplate.opsForValue().set("stock", realStock + "");
-                System.out.println(realStock);
-            } else {
-                System.out.println("failed");
+            if (rLock.tryLock(5, TimeUnit.SECONDS)) {
+                Product product = productService.getProduct(productId);
+                int currentStock = product.getStock();
+                if (currentStock > 0) {
+                    product.setStock(currentStock - 1);
+                    productService.updateProduct(productId, product);
+                }
             }
-        }finally {
+        } catch (Exception e) {
+
+        } finally {
             rLock.unlock();
-            //if(ClientID.equals(stringRedisTemplate.opsForValue().get(LockKey))){
-            //   stringRedisTemplate.delete(LockKey);
-            //}
-        }
-        return "end";
         }
 
+
+        return null;
     }
+}
 
 
