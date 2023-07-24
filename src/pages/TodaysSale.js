@@ -10,7 +10,6 @@ import { Container } from 'react-bootstrap';
 export default function TodaysSale() {
 
     const dispatch = useDispatch();
-    // 从state中获取productList（store）产品信息
     const productList = useSelector(state => state.productList)
     const { loading, error, products} = productList
     useEffect(() => {

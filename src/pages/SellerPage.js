@@ -18,7 +18,7 @@ export default function SellerPage() {
 }, []); // 空数组作为依赖项
 
   const loadProducts = async () => {
-    const result = await axios.get(`http://localhost:9000/product-service/flashsale/seller/${userInfo.id}/products`);
+    const result = await axios.get(`${BASE_URL}/product-service/flashsale/seller/${userInfo.id}/products`);
     setProducts(result.data);
   };
 

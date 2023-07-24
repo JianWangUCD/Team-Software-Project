@@ -113,7 +113,7 @@ export default function ProductPage() {
 
     // Clean up the interval when the component unmounts to avoid memory leaks
     return () => clearInterval(interval1, interval2);
-  }, [product, isSaleStarted]); // Add "product" as a dependency for the second useEffect hook
+  }, [product, isSaleStarted, countdown]); // Add "product" as a dependency for the second useEffect hook
 
   
   if (!product){
@@ -139,13 +139,16 @@ export default function ProductPage() {
 
         <h3 className="display-6  my-4">${product.price}</h3>
         <p className="lead">{product.detail}</p>
-        {/* <h3 className="lead">Sale Start: {format(new Date(product.saleStartTime), 'yyyy-MM-dd HH:mm:ss')}</h3> */}
+        <h3 className="lead">Sale Start: {format(new Date(product.saleStartTime), 'yyyy-MM-dd HH:mm:ss')}</h3>
         
         <p className="lead">Stock: {product.stock}</p>
-        <p className="lead">
+
+        {countdown && 
+            <p className="lead">
               Sale starts in: {countdown.days} days, {countdown.hours} hours,{' '}
               {countdown.minutes} minutes, {countdown.seconds} seconds
-            </p>
+            </p>}
+
         <button
             className="btn btn-outline-dark"
             onClick={handleCheckout}

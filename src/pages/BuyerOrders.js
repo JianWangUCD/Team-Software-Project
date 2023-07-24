@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { BASE_URL } from '../api';
+import { format } from 'date-fns';
 
 // 等待Orders修改
 export default function BuyerOrders() {
@@ -14,68 +15,30 @@ export default function BuyerOrders() {
   const { userInfo } = userLogin
 
   const [orders, setOrders] = useState([]);
-  const [products, setProducts] = useState([]);
 
-  // useEffect(() => {
-  //   const fetchOrderHistory = async () => {
-  //     try {
-  //       const ordersResponse = await axios.get(
-  //         `${BASE_URL}/order-service/flashsale/user/${userInfo.id}/orders`
-  //       );
-  //       const ordersData = ordersResponse.data;
-  //       setOrders(ordersData);
-  //       console.log("Orders:", ordersData);
-  //     } catch (error) {
-  //       console.error('Error fetching order history:', error);
-  //     }
-  //   };
-
-  //   fetchOrderHistory();
-  // }, [userInfo.id]);
-
-  // useEffect(() => {
-  //   const fetchProductInformation = async () => {
-  //     try {
-  //       const productIds = orders.map((order) => order.productId);
-  //       const productsResponse = await Promise.all(
-  //         productIds.map((productId) =>
-  //           axios.get(`${BASE_URL}/product-service/flashsale/products/${productId}`)
-  //         )
-  //       );
-  //       const productsData = productsResponse.map((response) => response.data);
-  //       setProducts(productsData);
-  //       console.log("Products:", productsData);
-  //     } catch (error) {
-  //       console.error('Error fetching product information:', error);
-  //     }
-  //   };
-
-  //   fetchProductInformation();
-  // }, [orders]);
-
+  const fetchOrderHistory = async () => {
+    try {
+      const ordersResponse = await axios.get(
+        `${BASE_URL}/order-service/flashsale/user/${userInfo.id}/orders`
+      );
+      const ordersData = ordersResponse.data;
+      setOrders(ordersData);
+      console.log("Orders:", ordersData);
+    } catch (error) {
+      console.error('Error fetching order history:', error);
+    }
+  };
 
   useEffect(() => {
-    const fetchOrderHistory = async () => {
-      try {
-        const ordersResponse = await axios.get(
-          `${BASE_URL}/order-service/flashsale/user/${userInfo.id}/orders`
-        );
-        const ordersData = ordersResponse.data;
-        setOrders(ordersData);
-        console.log("Orders:", ordersData);
-      } catch (error) {
-        console.error('Error fetching order history:', error);
-      }
-    };
-
     fetchOrderHistory();
   }, [userInfo.id]);
 
   const deleteOrder = async (orderId) => {
     try {
       // 向后端发送删除订单的请求
-      await axios.delete(`/api/orders/${orderId}`);
+      await axios.delete(`${BASE_URL}/order-service/flashsale/orders/${orderId}`);
       // 重新获取订单历史
+      fetchOrderHistory();
       navigate("/user/orders")
     } catch (error) {
       console.error('Error deleting order:', error);
@@ -108,11 +71,11 @@ export default function BuyerOrders() {
                         className="card-img-top p-3"
                         src={order.img}
                         alt={order.productName}
-                        style={{ width: '100px', height: '100px' }}
+                        style={{ width: '150px', height: '150px' }}
                       />
                     </td>
                     <td>{order.amount}</td>
-                    <td>{order.orderTime}</td>
+                    <td>{format(new Date(order.orderTime), 'yyyy-MM-dd HH:mm:ss')}</td>
                     <td>
                       <button
                         className="btn btn-danger mx-2"
