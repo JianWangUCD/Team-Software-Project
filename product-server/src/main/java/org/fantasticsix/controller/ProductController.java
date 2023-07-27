@@ -16,7 +16,6 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-//@CrossOrigin("http://localhost:3000")
 @Slf4j
 public class ProductController {
 
@@ -37,6 +36,16 @@ public class ProductController {
 
         List<Product> productsBySeller = productService.getProductsBySeller(sellerId);
         return productsBySeller;
+    }
+
+
+    //delete products by sellerId
+    @DeleteMapping("/flashsale/seller/{sellerId}/products")
+    public ResponseEntity<Void> deleteProductBySeller(@PathVariable long sellerId) {
+        productService.deleteProductsBySeller(sellerId);
+
+        ResponseEntity<Void> responseEntity = ResponseEntity.noContent().build();
+        return responseEntity;
     }
 
 
@@ -71,19 +80,21 @@ public class ProductController {
     }
 
     @PutMapping("/flashsale/products/stock/{productId}")
-    public ResponseEntity<Void> updateProductStock(@PathVariable long productId, @RequestBody Order order) {
+    public ResponseEntity<String> updateProductStock(@PathVariable long productId, @RequestBody Order order) {
         // 根据商品ID查询数据库获取商品信息
         Product product = productService.getProduct(productId);
 
         // 更新商品信息中的库存数量
         int currentStock = product.getStock();
-        if(currentStock - 1 >= 0)
+        if(currentStock - 1 >= 0){
             currentStock--;
-        product.setStock(currentStock);
-        productService.updateProduct(productId, product);
+            productService.updateProduct(productId, product);
+            // 返回更新结果
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Insufficient stock for product with ID: " + productId);
+        }
 
-        // 返回更新结果
-        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/flashsale/products")
@@ -99,17 +110,6 @@ public class ProductController {
 
         return ResponseEntity.created(uri).build();
     }
-
-//    @PostMapping("/flashsale/products/uploadImage")
-//    public void uploadImage(@RequestParam("productId") Long productId, @RequestParam("file") MultipartFile file) {
-//        try {
-//            productService.uploadImage(productId, file);
-//        } catch (IOException e) {
-//            // 处理上传失败的情况
-//            log.error("error: {}", e.getMessage());
-//            throw new RuntimeException("error");
-//        }
-//    }
 
     @PostMapping("/flashsale/products/uploadImage")
     public ResponseEntity<String> uploadImage(

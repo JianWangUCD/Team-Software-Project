@@ -22,10 +22,6 @@ public interface ProductService {
 
     String uploadImage(MultipartFile file) throws IOException;
 
-//    void uploadImage(Long productId, MultipartFile file) throws IOException;
-
-
-    //Set<Product> addProductsToOrder(long orderId, Set<Product> productRequestList);
-    //Product addProductsToOrder(long orderId, Product productRequest);
+    void deleteProductsBySeller(Long sellerId);
 
 }

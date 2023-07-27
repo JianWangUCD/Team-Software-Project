@@ -78,7 +78,7 @@ public class UserController {
 //            String pwd = user.getPassword();
             user.setPassword(MD5Utils.getEncryptedPwd(user.getPassword()));
             User registeredUser = userService.register(user);
-            return ResponseEntity.ok("注册成功");
+            return ResponseEntity.ok("Successful registration");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

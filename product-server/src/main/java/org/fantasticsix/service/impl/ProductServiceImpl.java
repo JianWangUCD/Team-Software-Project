@@ -50,6 +50,17 @@ public class ProductServiceImpl implements ProductService {
         return products;
     }
 
+    @Override
+    public void deleteProductsBySeller(Long sellerId) {
+        List<Product> products = productRepository.findBySellerId(sellerId);
+        if (!products.isEmpty()) {
+            productRepository.deleteAll(products);
+        } else {
+            throw new RuntimeException("No products found for seller with ID: " + sellerId);
+        }
+    }
+
+
 
 
     @Override
@@ -66,6 +77,7 @@ public class ProductServiceImpl implements ProductService {
             throw new ProductNotFoundException(id);
         }
     }
+
 
     @Override
     public Product updateProduct(long id, Product product) {
