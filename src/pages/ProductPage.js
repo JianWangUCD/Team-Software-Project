@@ -8,13 +8,15 @@ import MessageBox from '../component/MessageBox';
 import { BASE_URL } from '../api';
 import { format } from 'date-fns';
 
+import { calculateCountdown, checkSaleStatus } from '../component/countdownUtils';
+
 
 export default function ProductPage() {
   const navigate = useNavigate();
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [isSaleStarted, setIsSaleStarted] = useState(false);
-  const [isSaleEnd, setIsSaleEnd] = useState(false);
+  const [isSoldOut, setIsSoldOut] = useState(false);
   const [countdown, setCountdown] = useState(null);
 
   // 返回获取的状态值
@@ -70,61 +72,27 @@ export default function ProductPage() {
     fetchProduct();
   }, [id]);
 
-  const checkSaleStatus = () => {
-    if (product) {
-      setIsSaleStarted(Date.now() >= new Date(product.saleStartTime) && Date.now() <= new Date(product.saleEndTime));
-      setIsSaleEnd(Date.now() >= new Date(product.saleEndTime || product.stock === 0));
-    }
-  };
-
 
 
   useEffect(() => {
-    
-    // 计算并更新倒计时时间
-    const calculateCountdown = () => {
-      const now = new Date().getTime();
-      if (product){
-        const saleStartTime = new Date(product.saleStartTime).getTime();
-        const saleEndTime = new Date(product.saleEndTime).getTime();
-        let timeDifference;
-        if (isSaleStarted && !isSaleEnd) { 
-          timeDifference = saleEndTime - now;
-        }else {
-          timeDifference = saleStartTime - now;
-        }
+
+    if (product) {
+      const interval = setInterval(() => {
+        const { isSaleStarted, isSoldout } = checkSaleStatus(product);
+        setIsSaleStarted(isSaleStarted);
+        setIsSoldOut(isSoldout);
+
         
-        if (timeDifference > 0) {
-          const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-          const hours = Math.floor(
-            (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-          );
-          const minutes = Math.floor(
-            (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
-          );
-          const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+          const countdown = calculateCountdown(product);
+          setCountdown(countdown);
+        //
+      }, 1000);
 
-          setCountdown({ days, hours, minutes, seconds });
-        }
-      }
-    };
-
-    // 计算倒计时初始值
-    calculateCountdown();
-
-    // Check the sale status initially when the component mounts
-    checkSaleStatus();
-
-    // Set an interval to check the sale status every second (or adjust the interval as needed)
-    const interval1 = setInterval(checkSaleStatus, 1000);
-    const interval2 = setInterval(calculateCountdown, 1000);
-
-    // Clean up the interval when the component unmounts to avoid memory leaks
-    return () => {
-      clearInterval(interval1);
-      clearInterval(interval2);
-    };
-  }, [product, isSaleStarted, isSaleEnd]); // Add "product" as a dependency for the second useEffect hook
+      return () => {
+        clearInterval(interval);
+      };
+    }
+  }, [product]);
 
 
   if (!product) {
@@ -154,28 +122,31 @@ export default function ProductPage() {
 
           <p className="lead">Stock: {product.stock}</p>
 
-          { isSaleStarted && !isSaleEnd ? (
+          { isSaleStarted && !isSoldOut ? (
              countdown && (
-              <p className="lead">
-            Sale end in: {countdown.days} days, {countdown.hours} hours,{' '}
-            {countdown.minutes} minutes, {countdown.seconds} seconds
-          </p>
+              <p className="lead countdown-info">
+            Sale end in: <span className="countdown-number">{countdown.days}</span> days, <span className="countdown-number">{countdown.hours}</span> hours,{' '}
+                  <span className="countdown-number">{countdown.minutes}</span> minutes, <span className="countdown-number">{countdown.seconds}</span> seconds
+                </p>
              )
           ) : (countdown && 
-            <p className="lead">
-              Sale starts in: {countdown.days} days, {countdown.hours} hours,{' '}
-              {countdown.minutes} minutes, {countdown.seconds} seconds
-            </p>
+                <p className="lead countdown-info">
+                  Sale start in: <span className="countdown-number">{countdown.days}</span> days, <span className="countdown-number">{countdown.hours}</span> hours,{' '}
+                  <span className="countdown-number">{countdown.minutes}</span> minutes, <span className="countdown-number">{countdown.seconds}</span> seconds
+                </p>
             )
           }
+          
 
           <button
             className="btn btn-outline-dark"
             onClick={handleCheckout}
-            disabled={!isSaleStarted && isSaleEnd}
+            disabled={!isSaleStarted || isSoldOut}
           >
             Checkout
           </button>
+
+
         </div>
       </div>
     </div>

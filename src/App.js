@@ -22,7 +22,6 @@ import TodaysSale from './pages/TodaysSale';
 import AdminPage from './pages/AdminPage';
 
 
-
 function App() {
   return (
     <BrowserRouter>

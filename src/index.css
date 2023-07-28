@@ -12,6 +12,35 @@ code {
     monospace;
 }
 
+.countdown-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.countdown-container {
+        text-align: center;
+      }
+      
+.countdown-number {
+  font-size: 24px;
+  color: #000000;
+  font-weight: bold;
+}
+
+
+@media screen and (max-width: 768px) {
+  .countdown-info {
+    font-size: 12px; 
+  }
+
+  .countdown-number {
+    font-size: 20px; 
+  }
+}
+
 /* 
 html {
   font-size: 62.5%; 

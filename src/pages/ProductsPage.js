@@ -31,6 +31,7 @@ export default function ProductsPage() {
         <div className="row center">
             {
               products
+              // only show products which will be sell
               .filter((product) => isAfter(new Date(product.saleEndTime), startOfDay(new Date())))
               .sort((a, b) => new Date(a.saleStartTime) - new Date(b.saleStartTime))
               .map((product) => (
