@@ -10,8 +10,8 @@ export default function LoginPage() {
     const location = useLocation();
     const navigate = useNavigate();
 
-    const [username, setUsername] = useState(""); // 用于保存用户名字
-    const [password, setPassword] = useState(""); // 用于保存密码
+    const [username, setUsername] = useState(""); // save username
+    const [password, setPassword] = useState(""); // save password
     
     const dispatch = useDispatch()
     const redirect = location.state?.from || "/";
@@ -28,11 +28,20 @@ export default function LoginPage() {
       if (userInfo && userInfo.role === "seller"){
         navigate("/seller")
       }
+      if (userInfo && userInfo.role === "admin"){
+        navigate("/admin")
+      }
   }, [navigate,userInfo, redirect])
     // 登陆函数
     
   const submitLogin = async (e) => {
         e.preventDefault();
+
+          // 做用户名和密码的验证
+        if (!username || !password) {
+          alert("Input cannot be empty");
+          return;
+        }
         // 用dispatch来查询，获取登陆后的数据
         dispatch(login(username, password))
       };
@@ -69,21 +78,6 @@ export default function LoginPage() {
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
-              {/* 是否选择角色登陆，如果有两个表，有两个URL，需要选择角色，然后通过判断role使用不同的action */}
-              {/* <div className="my-3">
-                <label htmlFor="role">Role</label>
-                <select
-                  className="form-select"
-                  id="role"
-                  value={role}
-                  onChange={handleRoleChange}
-                >
-
-                  <option value="">Select role</option>
-                  <option value="seller">seller</option>
-                  <option value="customer">buyer</option>
-                </select>
-              </div> */}
               <div className="my-3">
                 <p>New Here? <Link to="/register" className="text-decoration-underline text-info">Register</Link> </p>
               </div>

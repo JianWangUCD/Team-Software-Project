@@ -22,7 +22,7 @@ export default function ProductPage() {
 
   const fetchProduct = async () => {
     try {
-      const response = await axios.get(`http://localhost:9000/product-service/flashsale/products/${id}`);
+      const response = await axios.get(`${BASE_URL}/product-service/flashsale/products/${id}`);
       setProduct(response.data);
       setIsSaleStarted(Date.now() >= new Date(response.data.saleStartTime));
     } catch (error) {
@@ -156,22 +156,6 @@ export default function ProductPage() {
           >
           Checkout
         </button>
-        {/* {isSaleStarted ? (
-          <button
-            className="btn btn-outline-dark"
-            onClick={handleCheckout}
-            disabled={!isSaleStarted}
-          >
-            Checkout
-          </button>
-        ) : (
-          countdown && (
-            <p className="lead">
-              Sale starts in: {countdown.days} days, {countdown.hours} hours,{' '}
-              {countdown.minutes} minutes, {countdown.seconds} seconds
-            </p>
-          )
-        )} */}
       </div>
     </div>
   </div>

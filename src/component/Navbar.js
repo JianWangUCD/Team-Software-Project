@@ -51,6 +51,36 @@ function Navbar() {
       </div>
   ) 
 
+  if (userInfo && userInfo.role === "admin") 
+  return (
+    <div>
+      <BootstrapNavbar bg="light" expand="lg" sticky="top" className="py-3" 
+                collapseOnSelect>
+        <Container>
+        <BootstrapNavbar.Brand as={NavLink} to="/admin" className="fw-bold fs-3 px-2">
+          Flash Sale Managenment: {userInfo.username}
+        </BootstrapNavbar.Brand>
+        <BootstrapNavbar.Toggle aria-controls="basic-navbar-nav" />
+
+        <BootstrapNavbar.Collapse id="basic-navbar-nav">
+          <Nav className="m-auto" >
+            <Nav.Item>
+              <NavLink className="nav-link" to="/admin">
+              Manage users
+              </NavLink>
+            </Nav.Item>
+            <Nav.Item>
+            <NavLink className="nav-link" onClick={logoutHandler}>
+                   Logout
+                 </NavLink>
+            </Nav.Item>
+          </Nav>
+          </BootstrapNavbar.Collapse>
+        </Container>
+      </BootstrapNavbar>
+      </div>
+  ) 
+
   return (
     <div>
       <BootstrapNavbar bg="light" expand="lg" sticky="top" className="py-3" 

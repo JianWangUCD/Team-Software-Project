@@ -19,6 +19,7 @@ import Footer from './component/Footer';
 import LoginPage from './pages/LoginPage';
 import CheckoutPage from './pages/CheckoutPage';
 import TodaysSale from './pages/TodaysSale';
+import AdminPage from './pages/AdminPage';
 
 
 
@@ -46,6 +47,9 @@ function App() {
             {/* accessed by buyer */}
               <Route exact path="/checkout" Component={CheckoutPage} />
               <Route exact path="/user/orders" Component={BuyerOrders} />
+
+            {/* accessed by admin */}
+            <Route exact path="/admin" Component={AdminPage} />
             
             
           </Routes>

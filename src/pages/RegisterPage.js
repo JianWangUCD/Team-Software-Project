@@ -26,7 +26,7 @@ export default function Register() {
   };
 
   const validatePassword = () => {
-    // 密码正则表达式，要求密码长度为至少8位，包含至少一个特殊符号、一个字母和一个数字
+    // Password regular expression, requiring a password length of at least 8 characters, containing at least one special symbol, one letter and one number
     const passwordRegex = /^(?=.*[!@#$%^&*])(?=.*[a-zA-Z])(?=.*\d).{8,}$/;
     return passwordRegex.test(password);
   };
