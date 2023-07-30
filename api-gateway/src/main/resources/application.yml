@@ -4,6 +4,12 @@ server:
 spring:
   application:
     name: api-gateway
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/flashsalegateway
+    username: root
+    password: nz321z1231997
+
   cloud:
     nacos:
       discovery:
@@ -12,3 +18,13 @@ spring:
       discovery:
         locator:
           enabled: true # 让gateway可以发现nacos中的微服务
+#    routes:
+#      - id: flashsale
+#        uri: http://localhost:9000
+#        predicates:
+#        - Path = /api/**
+
+#  main:
+#    allow-bean-definition-overriding: true
+
+

@@ -31,7 +31,7 @@ public class ProductController {
     }
 
     //search by sellerId
-    @GetMapping("/flashsale/seller/{sellerId}/products")
+    @GetMapping("/seller/{sellerId}/products")
     public List<Product> getProductBySeller(@PathVariable long sellerId) {
 
         List<Product> productsBySeller = productService.getProductsBySeller(sellerId);
@@ -40,7 +40,7 @@ public class ProductController {
 
 
     //delete products by sellerId
-    @DeleteMapping("/flashsale/seller/{sellerId}/products")
+    @DeleteMapping("/seller/{sellerId}/products")
     public ResponseEntity<Void> deleteProductBySeller(@PathVariable long sellerId) {
         productService.deleteProductsBySeller(sellerId);
 
@@ -57,7 +57,7 @@ public class ProductController {
         return product;
     }
 
-    @DeleteMapping("/flashsale/products/{id}")
+    @DeleteMapping("/seller/products/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable long id) {
 
         productService.deleteProduct(id);
@@ -66,7 +66,7 @@ public class ProductController {
         return responseEntity;
     }
 
-    @PutMapping("/flashsale/products/{id}")
+    @PutMapping("/seller/products/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable long id,
                                                  @RequestBody Product product) {
 
@@ -97,7 +97,7 @@ public class ProductController {
 
     }
 
-    @PostMapping("/flashsale/products")
+    @PostMapping("/seller/products")
     public ResponseEntity<Void> createProduct(@RequestBody Product product){
 
         Product createdProduct = productService.createProduct(product);
@@ -111,7 +111,7 @@ public class ProductController {
         return ResponseEntity.created(uri).build();
     }
 
-    @PostMapping("/flashsale/products/uploadImage")
+    @PostMapping("/seller/products/uploadImage")
     public ResponseEntity<String> uploadImage(
             @RequestParam("file") MultipartFile file
     ) {

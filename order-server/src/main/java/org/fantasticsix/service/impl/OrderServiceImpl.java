@@ -83,26 +83,24 @@ public class OrderServiceImpl implements OrderService {
         log.info("The information of the product {} is found, the content is: {}", productId,
                 JSON.toJSONString(product));
 
-            //创建订单并保存
-            Order order = new Order();
-            order.setUserId(userId);
-            order.setProductId(productId);
-            order.setAmount(product.getPrice());
+        //创建订单并保存
+        Order order = new Order();
+        order.setUserId(userId);
+        order.setProductId(productId);
+        order.setAmount(product.getPrice());
 
-            order.setProductName(product.getProductName());
-            order.setImg(product.getImg());
-            order.setPrice(product.getPrice());
-            order.setOrderTime(LocalDateTime.now());
+        order.setProductName(product.getProductName());
+        order.setImg(product.getImg());
+        order.setPrice(product.getPrice());
+        order.setOrderTime(LocalDateTime.now());
 
-            orderRepository.save(order);
-            log.info("Create order successfully, the order information is {}", JSON.toJSONString(order));
+        orderRepository.save(order);
+        log.info("Create order successfully, the order information is {}", JSON.toJSONString(order));
 
-            // stock-1
-            updateProductStock(productId, order);
-            return order;
+        // stock-1
+        updateProductStock(productId, order);
 
-
-
+        return order;
 
     }
 
