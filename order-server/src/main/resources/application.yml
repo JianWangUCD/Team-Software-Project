@@ -33,7 +33,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/flashsaleorders
     username: root
-    password: nz321z1231997
+    password: ucd21213011.
 
   jpa:
     show-sql: true

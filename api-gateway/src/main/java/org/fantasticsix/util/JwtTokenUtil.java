@@ -41,7 +41,7 @@ private static final String SECRET_KEY = "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
         }
     }
 
-    public String getUsernameFromToken(String token) {
+    public static String getUsernameFromToken(String token) {
         Claims claims = Jwts.parser()
                 .setSigningKey(SECRET_KEY)
                 .parseClaimsJws(token)
@@ -50,7 +50,7 @@ private static final String SECRET_KEY = "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
         return claims.getSubject();
     }
 
-    public String getRoleFromToken(String token) {
+    public static String getRoleFromToken(String token) {
         Claims claims = Jwts.parser()
                 .setSigningKey(SECRET_KEY)
                 .parseClaimsJws(token)

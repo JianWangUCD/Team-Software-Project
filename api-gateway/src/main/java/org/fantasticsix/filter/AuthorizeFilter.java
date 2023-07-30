@@ -60,6 +60,20 @@ public class AuthorizeFilter implements GlobalFilter, Ordered {
         try {
             tokent = tokent.substring("Bearer ".length());
             Claims claims = JwtTokenUtil.parseJWT(tokent);
+
+            String role = JwtTokenUtil.getRoleFromToken(tokent);
+            if(role.equals("admin")){ //如果是admin，不受限制
+                Mono<Void> filter = chain.filter(exchange);
+                return filter;
+            }
+            else if(role.equals("buyer") && (path.startsWith("/order-service/flashsale/checkout") || path.startsWith("/order-service/flashsale/stock-check"))){
+                Mono<Void> filter = chain.filter(exchange);
+                return filter;
+            }
+            else if(role.equals("seller") && path.startsWith("/product-service/seller")){
+                Mono<Void> filter = chain.filter(exchange);
+                return filter;
+            }
         } catch (Exception e) {
             e.printStackTrace();
             //解析失败，响应401错误
@@ -67,8 +81,11 @@ public class AuthorizeFilter implements GlobalFilter, Ordered {
             return response.setComplete();
         }
 
-        //放行
-        return chain.filter(exchange);
+        response.setStatusCode(HttpStatus.UNAUTHORIZED);
+        return response.setComplete();
+
+//        //放行
+//        return chain.filter(exchange);
     }
 
 
