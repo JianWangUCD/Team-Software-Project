@@ -1,26 +1,37 @@
 package redisTest;
 
 import org.redisson.Redisson;
+import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 import java.io.ObjectInputFilter;
 
 @SpringBootApplication
 public class RedisApplication {
 
-    public static void main(String[] args) {
+    @Configuration
+    public class RedissonClientConfig {
+        @Value("${spring.redis.host}")
+        private String host;
+        @Value("${spring.redis.port}")
+        private String port;
+        @Value("${spring.redis.password}")
+        private String password;
 
-        SpringApplication.run(RedisApplication.class, args);
-    }
-    @Bean
-    public Redisson redisson(){
-        //standalone
-        Config config = new Config();
-        config.useSingleServer().setAddress("redis://localhost:6379").setDatabase(0);
-        return (Redisson) Redisson.create(config);
+        @Bean
+        public RedissonClient getRedisson() {
+            Config config = new Config();
+            config.useSingleServer().setAddress("redis://" + host + ":" + port).setPassword(password)
+                    .setRetryInterval(50000)
+                    .setTimeout(100000)
+                    .setConnectTimeout(100000);
+            return Redisson.create(config);
+        }
     }
 
 }
