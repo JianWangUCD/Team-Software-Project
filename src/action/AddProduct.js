@@ -41,7 +41,6 @@ export default function AddProduct() {
     try {
       const formData = new FormData();
       formData.append('file', selectedImage);
-      // const response = await axios.post(`${BASE_URL}/product-service/seller/products/uploadImage`, 
       const response = await axios.post(`/product-service/seller/products/uploadImage`, 
       formData,
       {

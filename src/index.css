@@ -41,6 +41,11 @@ code {
   }
 }
 
+.sold-out {
+  font-weight: bold;
+  color: darkred;
+}
+
 /* 
 html {
   font-size: 62.5%; 

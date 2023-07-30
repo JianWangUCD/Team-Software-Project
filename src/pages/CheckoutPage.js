@@ -31,6 +31,8 @@ export default function CheckoutPage() {
   });
 
   const [isFormFilled, setIsFormFilled] = useState(false);
+  const [totalItems, setTotalItems] = useState(''); // 默认值为'items'
+  const [subtotal, setSubtotal] = useState('');
 
   const handleFormChange = event => {
     const { id, value } = event.target;
@@ -46,6 +48,27 @@ export default function CheckoutPage() {
     const isFilled = Object.values(formValues).every(value => value !== '');
     setIsFormFilled(isFilled);
   }, [formValues]);
+
+  useEffect(() => {
+    // Fetch product information based on the productId
+    const fetchProductInfo = async () => {
+      try {
+        const response = await axios.get(
+          `/product-service/flashsale/products/${productId}`
+        );
+        if (response.data) {
+          setTotalItems(response.data.productName); // 设置totalItems为产品名称
+          setSubtotal(response.data.price); // 设置productName为产品名称
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchProductInfo();
+  }, [productId, axios]);
+
+  
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -69,9 +92,9 @@ export default function CheckoutPage() {
     
   };
 
-  let totalItems = "items";
-  let shipping = 50;
-  let subtotal = 12.79;
+
+  let shipping = 10;
+
   
   return (
     <div className="container py-5">
@@ -84,10 +107,15 @@ export default function CheckoutPage() {
             <div className="card-body">
               <ul className="list-group list-group-flush">
                 <li className="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
-                  Products ({totalItems})<span>${Math.round(subtotal)}</span>
+                  Products: 
+                  <span>{totalItems}</span>
                 </li>
                 <li className="list-group-item d-flex justify-content-between align-items-center px-0">
-                  Shipping
+                  Price:
+                  <span>${subtotal}</span>
+                </li>
+                <li className="list-group-item d-flex justify-content-between align-items-center px-0">
+                  Shipping:
                   <span>${shipping}</span>
                 </li>
                 <li className="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
@@ -111,7 +139,7 @@ export default function CheckoutPage() {
               <form className="needs-validation" onSubmit={handleSubmit}>
                 <div className="row g-3">
                   <div className="col-sm-6 my-1">
-                    <label for="firstName" className="form-label">
+                    <label htmlFor="firstName" className="form-label">
                       First name
                     </label>
                     <input
@@ -130,7 +158,7 @@ export default function CheckoutPage() {
                   </div>
 
                   <div className="col-sm-6 my-1">
-                    <label for="lastName" className="form-label">
+                    <label htmlFor="lastName" className="form-label">
                       Last name
                     </label>
                     <input
@@ -148,7 +176,7 @@ export default function CheckoutPage() {
                   </div>
 
                   <div className="col-12 my-1">
-                    <label for="email" className="form-label">
+                    <label htmlFor="email" className="form-label">
                       Email
                     </label>
                     <input
@@ -167,7 +195,7 @@ export default function CheckoutPage() {
                   </div>
 
                   <div className="col-12 my-1">
-                    <label for="address" className="form-label">
+                    <label htmlFor="address" className="form-label">
                       Address
                     </label>
                     <input
@@ -185,9 +213,9 @@ export default function CheckoutPage() {
                   </div>
 
                   <div className="col-12">
-                    <label for="address2" className="form-label">
+                    <label htmlFor="address2" className="form-label">
                       Address 2{" "}
-                      <span className="text-muted">(Optional)</span>
+                      {/* <span className="text-muted">(Optional)</span> */}
                     </label>
                     <input
                       type="text"
@@ -200,7 +228,7 @@ export default function CheckoutPage() {
                   </div>
 
                   <div className="col-md-5 my-1">
-                    <label for="country" className="form-label">
+                    <label htmlFor="country" className="form-label">
                       Country
                     </label>
                     <br />
@@ -214,7 +242,7 @@ export default function CheckoutPage() {
                   </div>
 
                   <div className="col-md-4 my-1">
-                    <label for="state" className="form-label">
+                    <label htmlFor="state" className="form-label">
                       State
                     </label>
                     <br />

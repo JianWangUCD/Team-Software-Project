@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 // import data from '../data'
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams} from "react-router-dom";
 import { Link } from "react-router-dom";
 import MessageBox from '../component/MessageBox';
 import { BASE_URL } from '../api';
@@ -11,13 +11,14 @@ import useAxiosWithAuth from '../useAxiosWithAuth';
 
 
 import { calculateCountdown, checkSaleStatus } from '../component/countdownUtils';
+import { Container } from 'react-bootstrap';
 
 
 export default function ProductPage() {
 
   const axios = useAxiosWithAuth();
-
   const navigate = useNavigate();
+
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [isSaleStarted, setIsSaleStarted] = useState(false);
@@ -32,8 +33,6 @@ export default function ProductPage() {
     try {
       const response = await axios.get(`/product-service/flashsale/products/${id}`);
       setProduct(response.data);
-      // setIsSaleStarted(Date.now() >= new Date(response.data.saleStartTime));
-      // setIsSaleEnd(Date.now() <= new Date(response.data.saleEndTime && response.data.stock === 0));
     } catch (error) {
       console.error(error);
     }
@@ -58,9 +57,6 @@ export default function ProductPage() {
             // <MessageBox>Sold out</MessageBox>
             console.log("Sold out")
           }
-          // fetchProduct();
-          // // 进行一些成功提示或导航到订单详情页面等操作
-          // navigate(`/product/${product.id}`)
         } else {
           console.error('You are not a buyer');
           // <MessageBox>You are not a buyer</MessageBox>
@@ -69,6 +65,9 @@ export default function ProductPage() {
         navigate("/login", { state: { from: `/product/${id}` } });
       }
     } catch (error) {
+      if (error.response && error.response.status === 401){
+        
+      }
       console.error(error);
     }
   };
@@ -106,8 +105,11 @@ export default function ProductPage() {
 
 
   return (
+    // <Container>
+    // <Link className='btn btn-dark my-3' to='/products'> return </Link>
+    
     <div className="container my-5 py-2">
-      <Link className='btn btn-dark my-3' to='/products'> return </Link>
+      
       <div className="row">
         <div className="col-md-6 col-sm-12 py-3">
           <img
@@ -155,6 +157,6 @@ export default function ProductPage() {
         </div>
       </div>
     </div>
-
+    // </Container>
   );
 }

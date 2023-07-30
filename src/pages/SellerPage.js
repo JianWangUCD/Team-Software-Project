@@ -5,6 +5,7 @@ import { BASE_URL } from "../api";
 import { useSelector } from "react-redux";
 import { format } from 'date-fns';
 import useAxiosWithAuth from "../useAxiosWithAuth";
+import MessageBox from "../component/MessageBox";
 
 export default function SellerPage() {
 
@@ -30,6 +31,9 @@ export default function SellerPage() {
     loadProducts();
   };
 
+  if(!(userInfo.role === "seller" || userInfo.role === "admin")){
+    return <MessageBox>"You are not seller"</MessageBox>
+  }else{
   return (
     <div className="container">
       <div className="py-4">
@@ -80,4 +84,4 @@ export default function SellerPage() {
       </div>
     </div>
   );
-}
+}}

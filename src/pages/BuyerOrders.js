@@ -1,5 +1,5 @@
 
-import axios from 'axios';
+
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -38,7 +38,7 @@ export default function BuyerOrders() {
   const deleteOrder = async (orderId) => {
     try {
       // 向后端发送删除订单的请求
-      await axios.delete(`/order-service/flashsale/orders/${orderId}`);
+      await axios.delete(`/order-service/flashsale/user/orders/${orderId}`);
       // 重新获取订单历史
       fetchOrderHistory();
       navigate("/user/orders")
