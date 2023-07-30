@@ -7,11 +7,16 @@ import { Link } from "react-router-dom";
 import MessageBox from '../component/MessageBox';
 import { BASE_URL } from '../api';
 import { format } from 'date-fns';
+import useAxiosWithAuth from '../useAxiosWithAuth';
+
 
 import { calculateCountdown, checkSaleStatus } from '../component/countdownUtils';
 
 
 export default function ProductPage() {
+
+  const axios = useAxiosWithAuth();
+
   const navigate = useNavigate();
   const { id } = useParams();
   const [product, setProduct] = useState(null);
@@ -25,7 +30,7 @@ export default function ProductPage() {
 
   const fetchProduct = async () => {
     try {
-      const response = await axios.get(`${BASE_URL}/product-service/flashsale/products/${id}`);
+      const response = await axios.get(`/product-service/flashsale/products/${id}`);
       setProduct(response.data);
       // setIsSaleStarted(Date.now() >= new Date(response.data.saleStartTime));
       // setIsSaleEnd(Date.now() <= new Date(response.data.saleEndTime && response.data.stock === 0));
@@ -39,7 +44,7 @@ export default function ProductPage() {
       if (userInfo) {
         if (userInfo.role === "buyer") {
           const response = await axios.get(
-            `${BASE_URL}/order-service/flashsale/stock-check`,
+            `/order-service/flashsale/stock-check`,
             {
               params: {
                 productId: product.id

@@ -5,6 +5,7 @@ import { login } from "../action/authAction";
 import MessageBox from "../component/MessageBox";
 import LoadingBox from "../component/LoadingBox";
 
+
 export default function LoginPage() {
 
     const location = useLocation();
@@ -56,7 +57,7 @@ export default function LoginPage() {
         <div className="row my-4 h-100">
           <div className="col-md-4 col-lg-4 col-sm-8 mx-auto">
             <form>
-              <div class="my-3">
+              <div className="my-3">
                 <label for="display-4">username</label>
                 <input
                   type={"text"}
@@ -67,11 +68,11 @@ export default function LoginPage() {
                   onChange={(e) => setUsername(e.target.value)}
                 />
               </div>
-              <div class="my-3">
+              <div className="my-3">
                 <label for="floatingPassword display-4">Password</label>
                 <input
                   type={"password"}
-                  class="form-control"
+                  className="form-control"
                   placeholder="Password"
                   id = "password"
                   value={password}

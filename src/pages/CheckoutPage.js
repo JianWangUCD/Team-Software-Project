@@ -3,9 +3,11 @@ import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
 import { BASE_URL } from '../api';
 import MessageBox from '../component/MessageBox';
+import useAxiosWithAuth from '../useAxiosWithAuth';
 
 export default function CheckoutPage() {
 
+  const axios = useAxiosWithAuth();
   const navigate = useNavigate();
 
   const location = useLocation();
@@ -50,7 +52,7 @@ export default function CheckoutPage() {
     // Handle form submission
     try{
       const response = await axios.post(
-        `${BASE_URL}/order-service/flashsale/checkout`,
+        `/order-service/flashsale/checkout`,
         null,
         {
           params: {

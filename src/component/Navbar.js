@@ -105,7 +105,12 @@ function Navbar() {
             </Nav.Item>
             <Nav.Item>
               <NavLink className="nav-link" to="/todaysSale">
-                Today's Sale
+                Sale Soon
+              </NavLink>
+            </Nav.Item>
+            <Nav.Item>
+              <NavLink className="nav-link" to="/saleNow">
+                Sale Now
               </NavLink>
             </Nav.Item>
           </Nav>

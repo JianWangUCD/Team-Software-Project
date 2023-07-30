@@ -5,9 +5,11 @@ import { BASE_URL } from "../api";
 import { useSelector } from "react-redux";
 import { format } from 'date-fns';
 import MessageBox from "../component/MessageBox";
+import useAxiosWithAuth from "../useAxiosWithAuth";
 
 export default function AdminPage() {
 
+  const axios = useAxiosWithAuth();
   // 返回获取的状态值
   const userLogin = useSelector(state => state.userLogin)
   const { userInfo } = userLogin
@@ -20,7 +22,7 @@ export default function AdminPage() {
 }, []); // 空数组作为依赖项
 
   const loadUsers = async () => {
-    const result = await axios.get(`${BASE_URL}/user-service/flashsale/users`);
+    const result = await axios.get(`/user-service/flashsale/users`);
     const users = result.data;
     const buyersArray = users.filter(user => user.role === 'buyer');
     const sellersArray = users.filter(user => user.role === 'seller');
@@ -29,8 +31,8 @@ export default function AdminPage() {
   };
 
   const deleteUsers = async (id) => {
-    await axios.delete(`${BASE_URL}/user-service/flashsale/users/${id}`);
-    await axios.delete(`${BASE_URL}/product-service/flashsale/seller/${id}/products`);
+    await axios.delete(`/user-service/flashsale/users/${id}`);
+    await axios.delete(`/product-service/seller/${id}/products`);
     loadUsers();
   };
 

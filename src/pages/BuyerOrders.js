@@ -5,9 +5,11 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { BASE_URL } from '../api';
 import { format } from 'date-fns';
+import useAxiosWithAuth from '../useAxiosWithAuth';
 
 // 等待Orders修改
 export default function BuyerOrders() {
+  const axios = useAxiosWithAuth();
 
   const navigate = useNavigate();
   // 返回获取的状态值
@@ -19,7 +21,7 @@ export default function BuyerOrders() {
   const fetchOrderHistory = async () => {
     try {
       const ordersResponse = await axios.get(
-        `${BASE_URL}/order-service/flashsale/user/${userInfo.id}/orders`
+        `/order-service/flashsale/user/${userInfo.id}/orders`
       );
       const ordersData = ordersResponse.data;
       setOrders(ordersData);
@@ -36,7 +38,7 @@ export default function BuyerOrders() {
   const deleteOrder = async (orderId) => {
     try {
       // 向后端发送删除订单的请求
-      await axios.delete(`${BASE_URL}/order-service/flashsale/orders/${orderId}`);
+      await axios.delete(`/order-service/flashsale/orders/${orderId}`);
       // 重新获取订单历史
       fetchOrderHistory();
       navigate("/user/orders")

@@ -7,7 +7,7 @@ import { listProducts } from '../action/productAction';
 import { isToday, startOfDay } from 'date-fns';
 import { Container } from 'react-bootstrap';
 
-export default function TodaysSale() {
+export default function SaleSoon() {
 
     const dispatch = useDispatch();
     const productList = useSelector(state => state.productList)
@@ -15,6 +15,16 @@ export default function TodaysSale() {
     useEffect(() => {
       dispatch(listProducts())
     },[dispatch])
+
+    if(!products){
+      return (
+        <Container>
+          <div> No Products</div>;
+        </Container>
+      )
+      
+    }
+
   
     return (
       <div>
@@ -28,7 +38,7 @@ export default function TodaysSale() {
           <div className="row center">
               {
                 products
-                .filter((product) => isToday(startOfDay(new Date(product.saleStartTime))))
+                .filter((product) => new Date(product.saleStartTime) > new Date())
                 .sort((a, b) => new Date(a.saleStartTime) - new Date(b.saleStartTime))
                 .map((product) => (
                  <Product key = {product.id} product = {product}></Product>

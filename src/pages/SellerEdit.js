@@ -3,8 +3,11 @@ import { format } from 'date-fns';
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL } from "../api";
+import useAxiosWithAuth from "../useAxiosWithAuth";
 
 const SellerEdit = () => {
+
+  const axios = useAxiosWithAuth();
   let navigate = useNavigate();
   
   const { id } = useParams();
@@ -26,7 +29,7 @@ const SellerEdit = () => {
   }, []);
 
   const loadProduct = async () => {
-    const response = await axios.get(`${BASE_URL}/product-service/flashsale/products/${id}`);
+    const response = await axios.get(`/product-service/flashsale/products/${id}`);
     // const product = response.data;
     setProduct(response.data);
   };
@@ -58,7 +61,7 @@ const SellerEdit = () => {
     saleEndTime: formattedSaleEndTime
   };
 
-    await axios.put(`${BASE_URL}/product-service/flashsale/products/${id}`, updatedProduct);
+    await axios.put(`/product-service/seller/products/${id}`, updatedProduct);
     navigate("/seller");
   };
 

@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 import { Modal, Button } from 'react-bootstrap';
 import { format } from 'date-fns';
-import axios from "axios";
+// import axios from "axios";
 
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { BASE_URL } from "../api";
+import useAxiosWithAuth from "../useAxiosWithAuth";
 
 export default function AddProduct() {
+  const axios = useAxiosWithAuth();
+
   let navigate = useNavigate();
   const [productName, setProductName] = useState();
   const [img, setImg] = useState();
@@ -38,7 +41,9 @@ export default function AddProduct() {
     try {
       const formData = new FormData();
       formData.append('file', selectedImage);
-      const response = await axios.post(`${BASE_URL}/product-service/flashsale/products/uploadImage`, formData,
+      // const response = await axios.post(`${BASE_URL}/product-service/seller/products/uploadImage`, 
+      const response = await axios.post(`/product-service/seller/products/uploadImage`, 
+      formData,
       {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -80,7 +85,8 @@ export default function AddProduct() {
 
 
     console.log("Product: ", product)
-    await axios.post(`${BASE_URL}/product-service/flashsale/products` , product);
+    // await axios.post(`${BASE_URL}/product-service/seller/products` , product);
+    await axios.post(`/product-service/seller/products` , product);
     navigate("/seller");
   };
 

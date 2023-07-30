@@ -19,6 +19,10 @@ export default function ProductsPage() {
     dispatch(listProducts())
   },[dispatch])
 
+  if(!products){
+    return <div> No Products</div>;
+  }
+
   return (
     <div>
       <Container>

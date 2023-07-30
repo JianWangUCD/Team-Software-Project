@@ -4,8 +4,11 @@ import { Link, useParams } from "react-router-dom";
 import { BASE_URL } from "../api";
 import { useSelector } from "react-redux";
 import { format } from 'date-fns';
+import useAxiosWithAuth from "../useAxiosWithAuth";
 
 export default function SellerPage() {
+
+  const axios = useAxiosWithAuth();
 
   // 返回获取的状态值
   const userLogin = useSelector(state => state.userLogin)
@@ -18,12 +21,12 @@ export default function SellerPage() {
 }, []); // 空数组作为依赖项
 
   const loadProducts = async () => {
-    const result = await axios.get(`${BASE_URL}/product-service/flashsale/seller/${userInfo.id}/products`);
+    const result = await axios.get(`/product-service/seller/${userInfo.id}/products`);
     setProducts(result.data);
   };
 
   const deleteProducts = async (id) => {
-    await axios.delete(`${BASE_URL}/product-service/flashsale/products/${id}`);
+    await axios.delete(`/product-service/seller/products/${id}`);
     loadProducts();
   };
 
