@@ -66,7 +66,9 @@ public class AuthorizeFilter implements GlobalFilter, Ordered {
                 Mono<Void> filter = chain.filter(exchange);
                 return filter;
             }
-            else if(role.equals("buyer") && (path.startsWith("/order-service/flashsale/checkout") || path.startsWith("/order-service/flashsale/stock-check"))){
+            else if(role.equals("buyer") && (path.startsWith("/order-service/flashsale/checkout") ||
+                    path.startsWith("/order-service/flashsale/stock-check") ||
+                    path.startsWith("/order-service/flashsale/user"))){
                 Mono<Void> filter = chain.filter(exchange);
                 return filter;
             }

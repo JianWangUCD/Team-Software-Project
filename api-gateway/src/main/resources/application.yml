@@ -18,13 +18,6 @@ spring:
       discovery:
         locator:
           enabled: true # 让gateway可以发现nacos中的微服务
-#    routes:
-#      - id: flashsale
-#        uri: http://localhost:9000
-#        predicates:
-#        - Path = /api/**
 
-#  main:
-#    allow-bean-definition-overriding: true
 
 

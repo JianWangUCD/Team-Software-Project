@@ -13,5 +13,8 @@ public interface ProductFeignAPI {
 
     @PutMapping("/flashsale/products/stock/{productId}")
     ResponseEntity<Void> updateProductStock(@PathVariable long productId, @RequestBody Order order);
+
+    @PutMapping("/seller/products/{id}")
+    ResponseEntity<Product> updateProduct(@PathVariable long id, @RequestBody Product product);
 }
 

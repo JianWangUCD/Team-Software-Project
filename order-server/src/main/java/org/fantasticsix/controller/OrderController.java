@@ -34,6 +34,10 @@ public class OrderController {
     }
 
 
+    @GetMapping("/flashsale/user/{userId}/product/{productId}/orders")
+    public List<Order> getOrdersByUserIdAndProductId(@PathVariable Long userId, @PathVariable Long productId) {
+        return orderService.getOrdersByUserIdAndProductId(userId, productId);
+    }
 
     //search by id
     @GetMapping("/flashsale/orders/{id}")
@@ -70,7 +74,9 @@ public class OrderController {
     }
 
     @PostMapping("/flashsale/checkout")
-    public Order createOrder(long productId, long userId) {
+    public Order createOrder(Long productId, Long userId) {
+        if(userId == null)
+            userId = (long)(Math.random() * 5) + 1;
         return orderService.createOrder(productId, userId);
     }
 }
