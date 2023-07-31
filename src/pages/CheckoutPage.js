@@ -85,7 +85,7 @@ export default function CheckoutPage() {
         }
       );
       console.log("successful payment", response.data);
-      navigate(`/product/${productId}`);
+      navigate(`/user/orders`);
     }catch(error){
       console.log("Error", error);
     }
@@ -130,6 +130,7 @@ export default function CheckoutPage() {
             </div>
           </div>
         </div>
+        
         <div className="col-md-7 col-lg-8">
           <div className="card mb-4">
             <div className="card-header py-3">
@@ -232,13 +233,21 @@ export default function CheckoutPage() {
                       Country
                     </label>
                     <br />
-                    <select className="form-select" id="country" required>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="country"
+                      placeholder="Country"
+                      value={formValues.country}
+                      onChange={handleFormChange}
+                    />
+                    {/* <select className="form-select" id="country" required>
                       <option value="">Choose...</option>
                       <option>China</option>
                     </select>
                     <div className="invalid-feedback">
                       Please select a valid country.
-                    </div>
+                    </div> */}
                   </div>
 
                   <div className="col-md-4 my-1">
@@ -246,13 +255,21 @@ export default function CheckoutPage() {
                       State
                     </label>
                     <br />
-                    <select className="form-select" id="state" required>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="state"
+                      placeholder="state"
+                      value={formValues.state}
+                      onChange={handleFormChange}
+                    />
+                    {/* <select className="form-select" id="state" required>
                       <option value="">Choose...</option>
                       <option>Chongqing</option>
                     </select>
                     <div className="invalid-feedback">
                       Please provide a valid state.
-                    </div>
+                    </div> */}
                   </div>
 
                   <div className="col-md-3 my-1">

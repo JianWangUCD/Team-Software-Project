@@ -40,37 +40,6 @@ export default function AdminPage() {
     return <MessageBox>"You are not admin"</MessageBox>
   }else{
     return (
-        // <div className="container">
-        //   <div className="py-4">
-        //     <table className="table border shadow">
-        //       <thead>
-        //         <tr>
-        //           <th scope="col">user name</th>
-        //           <th scope="col">role</th>
-        //           <th scope="col"></th>
-        //         </tr>
-        //       </thead>
-        //       <tbody>
-        //         {users.map((user) => (
-        //           <tr>
-        //             <td>{user.username}</td>
-        //             <td>{user.role}</td>
-                
-        //             <td>
-        //               <button
-        //                 className="btn btn-danger mx-2"
-        //                 onClick={() => deleteUsers(user.id)}
-        //               >
-        //                 Delete
-        //               </button>
-        //             </td>
-        //           </tr>
-        //         ))}
-        //       </tbody>
-        //     </table>
-        //   </div>
-        // </div>
-
         <div className="container">
         <div className="py-4">
           <h2>Buyers</h2>

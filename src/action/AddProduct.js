@@ -81,10 +81,7 @@ export default function AddProduct() {
       saleStartTime: formattedSaleStartTime,
       saleEndTime: formattedSaleEndTime,
     };
-
-
     console.log("Product: ", product)
-    // await axios.post(`${BASE_URL}/product-service/seller/products` , product);
     await axios.post(`/product-service/seller/products` , product);
     navigate("/seller");
   };

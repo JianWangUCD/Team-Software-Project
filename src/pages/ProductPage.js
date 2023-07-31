@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 // import data from '../data'
-import { useNavigate, useParams} from "react-router-dom";
+import { useNavigate, useParams, } from "react-router-dom";
 import { Link } from "react-router-dom";
 import MessageBox from '../component/MessageBox';
 import { BASE_URL } from '../api';
@@ -12,6 +12,7 @@ import useAxiosWithAuth from '../useAxiosWithAuth';
 
 import { calculateCountdown, checkSaleStatus } from '../component/countdownUtils';
 import { Container } from 'react-bootstrap';
+import LoadingBox from '../component/LoadingBox';
 
 
 export default function ProductPage() {
@@ -24,6 +25,8 @@ export default function ProductPage() {
   const [isSaleStarted, setIsSaleStarted] = useState(false);
   const [isSoldOut, setIsSoldOut] = useState(false);
   const [countdown, setCountdown] = useState(null);
+  
+  const [isLoading, setIsLoading] = useState(true); // 添加isLoading状态
 
   // 返回获取的状态值
   const userLogin = useSelector(state => state.userLogin)
@@ -85,22 +88,28 @@ export default function ProductPage() {
         const { isSaleStarted, isSoldout } = checkSaleStatus(product);
         setIsSaleStarted(isSaleStarted);
         setIsSoldOut(isSoldout);
+        const countdown = calculateCountdown(product);
+        setCountdown(countdown);
 
-        
-          const countdown = calculateCountdown(product);
-          setCountdown(countdown);
-        //
       }, 1000);
-
+      setIsLoading(false);
+      
       return () => {
         clearInterval(interval);
       };
     }
+
+    
   }, [product]);
 
 
   if (!product) {
     return <div> Product Not Found</div>;
+  }
+  if (!countdown) {
+    return <>
+    <LoadingBox></LoadingBox>
+    </>;
   }
 
 
@@ -120,7 +129,7 @@ export default function ProductPage() {
           />
         </div>
         <div className="col-md-6 col-md-6 py-5">
-          <h4 className="text-uppercase text-muted">catogory</h4>
+          {/* <h4 className="text-uppercase text-muted">catogory</h4> */}
           <h1 className="display-5">{product.productName}</h1>
 
           <h3 className="display-6  my-4">${product.price}</h3>

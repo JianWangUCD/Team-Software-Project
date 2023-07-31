@@ -68,6 +68,10 @@ const SellerEdit = () => {
   return (
     <div className="container">
       <h2>Edit Product</h2>
+      <div>
+      <img className="img-fluid" src={product.img} alt={product.productName} width="200px"
+            height="400px" />
+      </div>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="productName" className="form-label">
@@ -83,7 +87,7 @@ const SellerEdit = () => {
             // onChange={(e) => setProductName(e.target.value)}
           />
         </div>
-        <div className="mb-3">
+        {/* <div className="mb-3">
           <label htmlFor="img" className="form-label">
             Image
           </label>
@@ -96,7 +100,7 @@ const SellerEdit = () => {
             onChange={handleChange}
             // onChange={(e) => setImg(e.target.value)}
           />
-        </div>
+        </div> */}
         <div className="mb-3">
           <label htmlFor="price" className="form-label">
             Price

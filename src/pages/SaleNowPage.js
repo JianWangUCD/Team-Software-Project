@@ -16,7 +16,7 @@ export default function SaleNowPage() {
     },[dispatch])
 
     if(!products){
-      return <div> No Products</div>;
+      return <div></div>;
     }
   
     return (

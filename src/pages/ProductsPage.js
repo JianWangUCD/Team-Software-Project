@@ -20,7 +20,7 @@ export default function ProductsPage() {
   },[dispatch])
 
   if(!products){
-    return <div> No Products</div>;
+    return <div> </div>
   }
 
   return (

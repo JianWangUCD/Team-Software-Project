@@ -18,9 +18,9 @@ export default function SaleSoon() {
 
     if(!products){
       return (
-        <Container>
-          <div> No Products</div>;
-        </Container>
+        <>
+          {/* <div> No Products</div>; */}
+        </>
       )
       
     }
