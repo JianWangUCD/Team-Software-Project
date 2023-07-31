@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Modal, Button } from 'react-bootstrap';
 import { format } from 'date-fns';
-// import axios from "axios";
+import axios from "axios";
 
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -9,7 +9,7 @@ import { BASE_URL } from "../api";
 import useAxiosWithAuth from "../useAxiosWithAuth";
 
 export default function AddProduct() {
-  const axios = useAxiosWithAuth();
+  const axiosAuth = useAxiosWithAuth();
 
   let navigate = useNavigate();
   const [productName, setProductName] = useState();
@@ -63,7 +63,7 @@ export default function AddProduct() {
     formData.append('file', selectedImage);
 
     // Send a request to the backend to get the pre-signed URL
-    const response = await axios.get('/seller/products/uploadImage', {
+    const response = await axiosAuth.get('/seller/products/uploadImage', {
       params: {
         extension: selectedImage.name.split('.').pop(), // Get the file extension
       },
@@ -107,7 +107,7 @@ export default function AddProduct() {
       saleEndTime: formattedSaleEndTime,
     };
     console.log("Product: ", product)
-    await axios.post(`/product-service/seller/products` , product);
+    await axiosAuth.post(`/product-service/seller/products` , product);
     navigate("/seller");
   };
 
