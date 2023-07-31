@@ -38,26 +38,51 @@ export default function AddProduct() {
   const handleUploadImage = async (event) => {
     event.preventDefault();
 
-    try {
-      const formData = new FormData();
-      formData.append('file', selectedImage);
-      const response = await axios.post(`/product-service/seller/products/uploadImage`, 
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
-      );
-      const imgPath = response.data;
-      setImg(imgPath);
-    } catch (error) {
-      console.error('Error while uploading image: ', error);
-    }
+  //   try {
+  //     const formData = new FormData();
+  //     formData.append('file', selectedImage);
+  //     const response = await axios.post(`/product-service/seller/products/uploadImage`, 
+  //     formData,
+  //     {
+  //       headers: {
+  //         "Content-Type": "multipart/form-data",
+  //       },
+  //     }
+  //     );
+  //     const imgPath = response.data;
+  //     setImg(imgPath);
+  //   } catch (error) {
+  //     console.error('Error while uploading image: ', error);
+  //   }
 
-    handleHideModal();
-  };
+  //   handleHideModal();
+  // };
 
+  try {
+    const formData = new FormData();
+    formData.append('file', selectedImage);
+
+    // Send a request to the backend to get the pre-signed URL
+    const response = await axios.get('/seller/products/uploadImage', {
+      params: {
+        extension: selectedImage.name.split('.').pop(), // Get the file extension
+      },
+    });
+
+    const updatePath = response.data;
+
+    // Use the pre-signed URL to upload the image to S3
+    await axios.put(updatePath, selectedImage);
+
+    // Save the image URL to the state
+    setImg(updatePath.split('?')[0]); // Only store the part before the '?' in the URL
+
+  } catch (error) {
+    console.error('Error while uploading image: ', error);
+  }
+
+  handleHideModal();
+};
 
  
   
