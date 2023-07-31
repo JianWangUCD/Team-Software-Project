@@ -71,7 +71,7 @@ export default function AddProduct() {
       const binaryImage = new Uint8Array(reader.result);
 
       // Send a request to the backend to get the pre-signed URL
-      const response = await axiosAuth.get('/seller/products/uploadImage', {
+      const response = await axiosAuth.get('product-service/seller/products/uploadImage', {
         params: {
           extension: selectedImage.name.split('.').pop(), // Get the file extension
         },
