@@ -35,8 +35,8 @@ export default function AddProduct() {
     setSelectedImage(event.target.files[0]);
   };
 
-  const handleUploadImage = async (event) => {
-    event.preventDefault();
+  // const handleUploadImage = async (event) => {
+  //   event.preventDefault();
 
   //   try {
   //     const formData = new FormData();
@@ -58,25 +58,36 @@ export default function AddProduct() {
   //   handleHideModal();
   // };
 
+  const handleUploadImage = async (event) => {
+  event.preventDefault();
+
   try {
     const formData = new FormData();
     formData.append('file', selectedImage);
 
-    // Send a request to the backend to get the pre-signed URL
-    const response = await axiosAuth.get('/seller/products/uploadImage', {
-      params: {
-        extension: selectedImage.name.split('.').pop(), // Get the file extension
-      },
-    });
+    // Use FileReader to read the image file and convert it to binary data
+    const reader = new FileReader();
+    reader.onload = async () => {
+      const binaryImage = new Uint8Array(reader.result);
 
-    const updatePath = response.data;
+      // Send a request to the backend to get the pre-signed URL
+      const response = await axiosAuth.get('/seller/products/uploadImage', {
+        params: {
+          extension: selectedImage.name.split('.').pop(), // Get the file extension
+        },
+      });
 
-    // Use the pre-signed URL to upload the image to S3
-    await axios.put(updatePath, selectedImage);
+      const updatePath = response.data;
 
-    // Save the image URL to the state
-    setImg(updatePath.split('?')[0]); // Only store the part before the '?' in the URL
+      // Use the pre-signed URL to upload the image to S3
+      await axios.put(updatePath, binaryImage);
 
+      // Save the image URL to the state
+      setImg(updatePath.split('?')[0]); // Only store the part before the '?' in the URL
+    };
+
+    // Start reading the image file as binary data
+    reader.readAsArrayBuffer(selectedImage);
   } catch (error) {
     console.error('Error while uploading image: ', error);
   }
