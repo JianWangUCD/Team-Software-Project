@@ -1,0 +1,61 @@
+#server:
+#  port: 8081
+#spring:
+#  application:
+#    name: product-service
+#  datasource:
+#    driver-class-name: com.mysql.jdbc.Driver
+#    url: jdbc:mysql://localhost:3306/flashsaletemp
+#    username: root
+#    password: ucd21213011.
+#  jpa:
+#    properties:
+#      hibernate:
+#        hbm2ddl:
+#          auto: update
+##        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+
+server:
+#  servlet:
+#    context-path: /api
+  port: 8081
+
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 52.215.184.45:8848
+
+  application:
+    name: product-service
+
+  datasource:
+    url: jdbc:mysql://flashsaledb.ccbk1nkjxq6v.eu-west-1.rds.amazonaws.com:3306/flashsaleproducts
+    username: admin
+    password: PASSWORD
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+  jackson:
+    date-format: dd/MM/yyyy
+
+springdoc:
+  api-docs:
+    path: /api-docs
+
+file:
+  upload-dir: /home/ec2-user/images
+
+# AWS credentials
+#amazon:
+#  aws:
+#    accessKey: {AKIAY5LYXOM7LB75NODN}
+#    secretKey: {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}
+#    region: {eu-west-1}
+#
+#aws:
+#  s3:
+#    bucket: {myflashsalebucket}

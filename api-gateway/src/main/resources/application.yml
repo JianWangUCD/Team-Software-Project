@@ -1,0 +1,23 @@
+
+server:
+  port: 9000
+spring:
+  application:
+    name: api-gateway
+
+  datasource:
+    url: jdbc:mysql://flashsaledb.ccbk1nkjxq6v.eu-west-1.rds.amazonaws.com:3306/flashsalegateway
+    username: admin
+    password: PASSWORD
+
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 52.215.184.45:8848
+    gateway:
+      discovery:
+        locator:
+          enabled: true # 让gateway可以发现nacos中的微服务
+
+
+
