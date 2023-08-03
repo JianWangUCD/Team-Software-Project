@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { format } from 'date-fns';
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
-import { BASE_URL } from "../api";
 import useAxiosWithAuth from "../useAxiosWithAuth";
 
 const SellerEdit = () => {
 
   const axios = useAxiosWithAuth();
   let navigate = useNavigate();
+
+  // const [startTimeError, setStartTimeError] = useState("");
+  // const [endTimeError, setEndTimeError] = useState("");
+  // const [priceError, setPriceError] = useState("");
+  // const [stockError, setStockError] = useState("");
   
   const { id } = useParams();
 
@@ -18,6 +21,13 @@ const SellerEdit = () => {
     price: "",
     stock: "",
     detail: "",
+    saleStartTime: "",
+    saleEndTime: ""
+  });
+
+  const [errors, setErrors] = useState({
+    price: "",
+    stock: "",
     saleStartTime: "",
     saleEndTime: ""
   });
@@ -39,21 +49,45 @@ const SellerEdit = () => {
       ...product,
       [e.target.name]: e.target.value
     });
+    setErrors({
+      ...errors,
+      [e.target.name]: ""
+    });
   };
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   await axios.put(`${BASE_URL}/product-service/flashsale/products/${id}`, product);
-  //   // 在更新后导航回SellerPage页面或其他适当的操作
-  //   navigate("/seller");
-  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    let validationErrors = {};
+    if (isNaN(product.price) || Number(product.price) <= 0) {
+      validationErrors.price = "Invalid price number";
+    }
+
+    if (isNaN(product.stock) || !Number.isInteger(Number(product.stock)) || Number(product.stock) <= 0) {
+      validationErrors.stock = "Invalid stock number";
+    }
+
+    const startTime = new Date(product.saleStartTime);
+    const endTime = new Date(product.saleEndTime);
+  
+    if (startTime <= new Date()) {
+      validationErrors.saleStartTime = "Start time must be in the future";
+    }
+  
+    if (endTime <= startTime) {
+      validationErrors.saleEndTime = "End time must be later than start time";
+    }
+  
+    
+    // Display error messages if there are validation errors
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
+
     const formattedSaleStartTime = format(new Date(product.saleStartTime), "yyyy-MM-dd'T'HH:mm:ss");
-  const formattedSaleEndTime = format(new Date(product.saleEndTime), "yyyy-MM-dd'T'HH:mm:ss");
+    const formattedSaleEndTime = format(new Date(product.saleEndTime), "yyyy-MM-dd'T'HH:mm:ss");
 
   const updatedProduct = {
     ...product,
@@ -84,36 +118,22 @@ const SellerEdit = () => {
             name="productName"
             value={product.productName}
             onChange={handleChange}
-            // onChange={(e) => setProductName(e.target.value)}
+            required
           />
         </div>
-        {/* <div className="mb-3">
-          <label htmlFor="img" className="form-label">
-            Image
-          </label>
-          <input
-            type="text"
-            className="form-control"
-            id="img"
-            name="img"
-            value={product.img}
-            onChange={handleChange}
-            // onChange={(e) => setImg(e.target.value)}
-          />
-        </div> */}
         <div className="mb-3">
           <label htmlFor="price" className="form-label">
             Price
           </label>
           <input
             type="text"
-            className="form-control"
+            className={`form-control ${errors.price ? "is-invalid" : ""}`}
             id="price"
             name="price"
             value={product.price}
             onChange={handleChange}
-            // onChange={(e) => setPrice(e.target.value)}
           />
+           {errors.price && <div className="invalid-feedback">{errors.price}</div>}
         </div>
         <div className="mb-3">
           <label htmlFor="stock" className="form-label">
@@ -121,12 +141,13 @@ const SellerEdit = () => {
           </label>
           <input
             type="text"
-            className="form-control"
+            className={`form-control ${errors.stock ? "is-invalid" : ""}`}
             id="stock"
             name="stock"
             value={product.stock}
             onChange={handleChange}
           />
+          {errors.stock && <div className="invalid-feedback">{errors.stock}</div>}
         </div>
         <div className="mb-3">
           <label htmlFor="detail" className="form-label">
@@ -147,12 +168,13 @@ const SellerEdit = () => {
           </label>
           <input
             type="datetime-local"
-            className="form-control"
+            className={`form-control ${errors.saleStartTime ? "is-invalid" : ""}`}
             id="saleStartTime"
             name="saleStartTime"
             value={product.saleStartTime}
             onChange={handleChange}
           />
+          {errors.saleStartTime && <div className="invalid-feedback">{errors.saleStartTime}</div>}
         </div>
         <div className="mb-3">
           <label htmlFor="saleEndTime" className="form-label">
@@ -160,12 +182,13 @@ const SellerEdit = () => {
           </label>
           <input
             type="datetime-local"
-            className="form-control"
+            className={`form-control ${errors.saleEndTime ? "is-invalid" : ""}`}
             id="saleEndTime"
             name="saleEndTime"
             value={product.saleEndTime}
             onChange={handleChange}
           />
+          {errors.saleEndTime && <div className="invalid-feedback">{errors.saleEndTime}</div>}
         </div>
         <button type="submit" className="btn btn-primary">
           Save Changes

@@ -58,7 +58,7 @@ export default function LoginPage() {
           <div className="col-md-4 col-lg-4 col-sm-8 mx-auto">
             <form>
               <div className="my-3">
-                <label for="display-4">username</label>
+                <label htmlFor="display-4">username</label>
                 <input
                   type={"text"}
                   className="form-control"
@@ -69,7 +69,7 @@ export default function LoginPage() {
                 />
               </div>
               <div className="my-3">
-                <label for="floatingPassword display-4">Password</label>
+                <label htmlFor="floatingPassword display-4">Password</label>
                 <input
                   type={"password"}
                   className="form-control"
@@ -83,7 +83,7 @@ export default function LoginPage() {
                 <p>New Here? <Link to="/register" className="text-decoration-underline text-info">Register</Link> </p>
               </div>
               <div className="text-center">
-                <button class="my-2 mx-auto btn btn-dark" type="submit" onClick={submitLogin}>
+                <button className="my-2 mx-auto btn btn-dark" type="submit" onClick={submitLogin}>
                   Login
                 </button>
               </div>

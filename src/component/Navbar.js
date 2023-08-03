@@ -11,6 +11,8 @@ function Navbar() {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
+
+
   //退出函数
   const logoutHandler = () => {
     dispatch(logout());
@@ -22,30 +24,52 @@ function Navbar() {
       <BootstrapNavbar bg="light" expand="lg" sticky="top" className="py-3" 
                 collapseOnSelect>
         <Container>
-        <BootstrapNavbar.Brand as={NavLink} to="/seller" className="fw-bold fs-3 px-2">
-          Flash Sale: {userInfo.username}
+        <BootstrapNavbar.Brand as={NavLink} to="/" className="fw-bold fs-3 px-2">
+          Flash Sale
         </BootstrapNavbar.Brand>
         <BootstrapNavbar.Toggle aria-controls="basic-navbar-nav" />
 
         <BootstrapNavbar.Collapse id="basic-navbar-nav">
-          <Nav className="m-auto" >
+          <Nav className="m-auto">
             <Nav.Item>
-              <NavLink className="nav-link" to="/seller">
-              Manage products
+              <NavLink className="nav-link" to="/">
+                Home
               </NavLink>
             </Nav.Item>
+            <Nav.Item>
+              <NavLink className="nav-link"  to="/products">
+                All Products
+              </NavLink>
+            </Nav.Item>
+
+            <Nav.Item>
+              <NavLink className="nav-link" to="/seller">
+              My products
+              </NavLink>
+            </Nav.Item>
+
             <Nav.Item>
               <NavLink className="nav-link" to="/addProduct">
                 Upload Products
               </NavLink>
             </Nav.Item>
+          </Nav>
+          
+          {/* 右侧导航 */}
+          <div className="ml-auto" id="basic-navbar-nav">
+            <NavDropdown className='' title={<span><i className="fa fa-user mr-3"></i>{userInfo.username}</span>} id='username'>
+            <NavDropdown.Item>
+           
             <Nav.Item>
             <NavLink className="nav-link" onClick={logoutHandler}>
                    Logout
                  </NavLink>
             </Nav.Item>
-          </Nav>
-          </BootstrapNavbar.Collapse>
+              </NavDropdown.Item>
+          </NavDropdown>
+      
+          </div>
+        </BootstrapNavbar.Collapse>
         </Container>
       </BootstrapNavbar>
       </div>
@@ -54,28 +78,47 @@ function Navbar() {
   if (userInfo && userInfo.role === "admin") 
   return (
     <div>
-      <BootstrapNavbar bg="light" expand="lg" sticky="top" className="py-3" 
+<BootstrapNavbar bg="light" expand="lg" sticky="top" className="py-3" 
                 collapseOnSelect>
         <Container>
-        <BootstrapNavbar.Brand as={NavLink} to="/admin" className="fw-bold fs-3 px-2">
-          Flash Sale Managenment: {userInfo.username}
+        <BootstrapNavbar.Brand as={NavLink} to="/" className="fw-bold fs-3 px-2">
+          Flash Sale
         </BootstrapNavbar.Brand>
         <BootstrapNavbar.Toggle aria-controls="basic-navbar-nav" />
 
         <BootstrapNavbar.Collapse id="basic-navbar-nav">
-          <Nav className="m-auto" >
+          <Nav className="m-auto">
             <Nav.Item>
-              <NavLink className="nav-link" to="/admin">
+              <NavLink className="nav-link"  to="/">
+                Home
+              </NavLink>
+            </Nav.Item>
+            <Nav.Item>
+              <NavLink className="nav-link"  to="/products">
+                Products
+              </NavLink>
+            </Nav.Item>
+            <Nav.Item>
+              <NavLink className="nav-link"  to="/admin">
               Manage users
               </NavLink>
             </Nav.Item>
+          </Nav>
+          
+          {/* 右侧导航 */}
+          <div className="ml-auto" id="basic-navbar-nav">
+            <NavDropdown className='' title={<span><i className="fa fa-user mr-3"></i>{userInfo.username}</span>} id='username'>
+            <NavDropdown.Item>
             <Nav.Item>
             <NavLink className="nav-link" onClick={logoutHandler}>
                    Logout
                  </NavLink>
             </Nav.Item>
-          </Nav>
-          </BootstrapNavbar.Collapse>
+              </NavDropdown.Item>
+          </NavDropdown>
+      
+          </div>
+        </BootstrapNavbar.Collapse>
         </Container>
       </BootstrapNavbar>
       </div>
@@ -114,6 +157,7 @@ function Navbar() {
               </NavLink>
             </Nav.Item>
           </Nav>
+          
           {/* 右侧导航 */}
           <div className="ml-auto">
           {userInfo && userInfo.role === 'buyer' ? (

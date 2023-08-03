@@ -1,7 +1,5 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
-import { BASE_URL } from '../api';
 import MessageBox from '../component/MessageBox';
 import useAxiosWithAuth from '../useAxiosWithAuth';
 
@@ -225,7 +223,12 @@ export default function CheckoutPage() {
                       placeholder="Apartment or suite"
                       value={formValues.address2}
                       onChange={handleFormChange}
+                      required
                     />
+
+                    <div className="invalid-feedback">
+                      Please enter your shipping address.
+                    </div>
                   </div>
 
                   <div className="col-md-5 my-1">
@@ -240,7 +243,12 @@ export default function CheckoutPage() {
                       placeholder="Country"
                       value={formValues.country}
                       onChange={handleFormChange}
+                      required
                     />
+
+                    <div className="invalid-feedback">
+                      Please input a country.
+                    </div>  
                     {/* <select className="form-select" id="country" required>
                       <option value="">Choose...</option>
                       <option>China</option>
@@ -262,7 +270,12 @@ export default function CheckoutPage() {
                       placeholder="state"
                       value={formValues.state}
                       onChange={handleFormChange}
+                      required
                     />
+
+                    <div className="invalid-feedback">
+                      Please provide a valid state.
+                    </div> 
                     {/* <select className="form-select" id="state" required>
                       <option value="">Choose...</option>
                       <option>Chongqing</option>

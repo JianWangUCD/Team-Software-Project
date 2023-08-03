@@ -17,12 +17,29 @@ export default function AddProduct() {
   const [detail, setDetail] = useState();
   const [price, setPrice] = useState();
   const [stock, setStock] = useState();
+  
   const [saleStartTime, setSaleStartTime] = useState(new Date());
   const [saleEndTime, setSaleEndTime] = useState(new Date());
-
+  
+  const [startTimeError, setStartTimeError] = useState("");
+  const [endTimeError, setEndTimeError] = useState("");
+  const [priceError, setPriceError] = useState("");
+  const [stockError, setStockError] = useState("");
 
   const [showModal, setShowModal] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
+
+  // Function to format a Date object to "yyyy-MM-ddThh:mm"
+const formatToLocalDatetimeString = (date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
+};
+  
   const handleShowModal = () => {
     setShowModal(true);
   };
@@ -35,31 +52,10 @@ export default function AddProduct() {
     setSelectedImage(event.target.files[0]);
   };
 
-  // const handleUploadImage = async (event) => {
-  //   event.preventDefault();
-
-  //   try {
-  //     const formData = new FormData();
-  //     formData.append('file', selectedImage);
-  //     const response = await axios.post(`/product-service/seller/products/uploadImage`, 
-  //     formData,
-  //     {
-  //       headers: {
-  //         "Content-Type": "multipart/form-data",
-  //       },
-  //     }
-  //     );
-  //     const imgPath = response.data;
-  //     setImg(imgPath);
-  //   } catch (error) {
-  //     console.error('Error while uploading image: ', error);
-  //   }
-
-  //   handleHideModal();
-  // };
-
   const handleUploadImage = async (event) => {
   event.preventDefault();
+
+
 
   try {
     const formData = new FormData();
@@ -97,13 +93,34 @@ export default function AddProduct() {
 };
 
  
-  
   // 返回获取的状态值获取登陆者id和role
   //获取登录成功后的用户信息
   const userInfo = useSelector(state => state.userLogin.userInfo);
   
   const onSubmit = async (e) => {
     e.preventDefault();
+
+    // Check if price is a valid number
+  if (isNaN(price) || Number(price) <= 0) {
+    setPriceError("Price must be a valid number");
+    return;
+  }
+
+  // Check if stock is a valid number and an integer
+  if (isNaN(stock) || !Number.isInteger(Number(stock)) || Number(stock) <= 0) {
+    setStockError("Stock must be a valid integer greater than zero");
+    return;
+  }
+
+    if (saleStartTime <= new Date()) {
+      setStartTimeError("Start time must be in the future");
+      return;
+    }
+  
+    if (saleEndTime <= saleStartTime) {
+      setEndTimeError("End time must be later than start time");
+      return;
+    }
 
     const formattedSaleStartTime = format(saleStartTime, "yyyy-MM-dd'T'HH:mm:ss");
     const formattedSaleEndTime = format(saleEndTime, "yyyy-MM-dd'T'HH:mm:ss");
@@ -122,6 +139,8 @@ export default function AddProduct() {
     await axiosAuth.post(`/product-service/seller/products` , product);
     navigate("/seller");
   };
+
+
 
 
   
@@ -144,7 +163,11 @@ export default function AddProduct() {
                 name="productName"
                 value={productName}
                 onChange={(e) => setProductName(e.target.value)}
+                required
               />
+              <div className="invalid-feedback">
+                      Product name required
+                    </div>
             </div>
             <div className="mb-3">
               <label htmlFor="Image" className="form-label">
@@ -157,7 +180,11 @@ export default function AddProduct() {
                 name="img"
                 value={img}
                 onChange={(e) => setImg(e.target.value)}
+              required
               />
+              <div className="invalid-feedback">
+                      Product image required
+                    </div>
               <Button className="ms-2" variant="primary" onClick={handleShowModal}>
                   Select Image
               </Button>
@@ -174,7 +201,7 @@ export default function AddProduct() {
                 name="detail"
                 value={detail}
                 onChange={(e) => setDetail(e.target.value)}
-              />
+                />
             </div>
             <div className="mb-3">
               <label htmlFor="price" className="form-label">
@@ -182,12 +209,16 @@ export default function AddProduct() {
               </label>
               <input
                 type={"text"}
-                className="form-control"
+                className={`form-control ${priceError ? "is-invalid" : ""}`}
                 placeholder="Enter price"
                 name="price"
                 value={price}
-                onChange={(e) => setPrice(e.target.value)}
-              />
+                onChange={(e) => {
+                  setPrice(e.target.value);
+                  setPriceError("");}}
+                required
+                />
+                 {priceError && <div className="invalid-feedback">Invalid price number</div>}
             </div>
             <div className="mb-3">
               <label htmlFor="stock" className="form-label">
@@ -195,12 +226,15 @@ export default function AddProduct() {
               </label>
               <input
                 type={"text"}
-                className="form-control"
+                className={`form-control ${stockError ? "is-invalid" : ""}`}
                 placeholder="Enter stock"
                 name="stock"
                 value={stock}
-                onChange={(e) => setStock(e.target.value)}
-              />
+                onChange={(e) => {
+                  setStock(e.target.value);
+                setStockError("");}}
+                />
+                {stockError && <div className="invalid-feedback">Invalid stock number</div>}
             </div>
             <div className="mb-3">
               <label htmlFor="saleStartTime" className="form-label">
@@ -208,12 +242,16 @@ export default function AddProduct() {
               </label>
               <input
                 type="datetime-local"
-                className="form-control"
+                className={`form-control ${startTimeError ? "is-invalid" : ""}`}
                 placeholder="Enter sale Start Time"
                 name="saleStartTime"
-                value={saleStartTime ? saleStartTime.toISOString().slice(0, 16) : ''}
-                onChange={(e) => setSaleStartTime(new Date(e.target.value))}
+                // value={saleStartTime ? saleStartTime.toISOString().slice(0, 16) : ''}
+                value={formatToLocalDatetimeString(saleStartTime)}
+                onChange={(e) => {
+                  setStartTimeError("");
+                  setSaleStartTime(new Date(e.target.value))}}
               />
+              {startTimeError && <div className="invalid-feedback">{startTimeError}</div>}
             </div>
             <div className="mb-3">
               <label htmlFor="saleEndTime" className="form-label">
@@ -221,12 +259,16 @@ export default function AddProduct() {
               </label>
               <input
                 type="datetime-local"
-                className="form-control"
+                className={`form-control ${endTimeError ? "is-invalid" : ""}`}
                 placeholder="Enter sale End Time"
                 name="saleEndTime"
-                value={saleEndTime ? saleEndTime.toISOString().slice(0, 16) : ''}
-                onChange={(e) => setSaleEndTime(new Date(e.target.value))}
+                // value={saleEndTime ? saleEndTime.toISOString().slice(0, 16) : ''}
+                value={formatToLocalDatetimeString(saleEndTime)}
+                onChange={(e) => {
+                  setEndTimeError("");
+                  setSaleEndTime(new Date(e.target.value))}}
               />
+              {endTimeError && <div className="invalid-feedback">{endTimeError}</div>}
             </div>
             <button type="submit" className="btn btn-outline-primary">
               Submit
@@ -262,7 +304,5 @@ export default function AddProduct() {
       </Modal.Body>
     </Modal>
     </div>
-
-    
   )
 }

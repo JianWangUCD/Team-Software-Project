@@ -46,6 +46,11 @@ code {
   color: darkred;
 }
 
+.active {
+  font-weight: bold;
+  color: #f60000; /* Change this to your desired active link color */
+}
+
 /* 
 html {
   font-size: 62.5%; 
