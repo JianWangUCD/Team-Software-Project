@@ -68,6 +68,12 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
     }
 
+//    // that method is for preventing overselling when creating order
+//    @Override
+//    public Product getProductByIdAndVersion(long productId, int version) {
+//        return productRepository.findByIdAndVersion(productId, version);
+//    }
+
     @Override
     public void deleteProduct(long id) {
         Optional<Product> product = productRepository.findById(id);

@@ -47,7 +47,7 @@ public class OrderController {
         return order;
     }
 
-    @DeleteMapping("/flashsale/orders/{id}")
+    @DeleteMapping("/flashsale/user/orders/{id}")
     public ResponseEntity<Void> deleteOrder(@PathVariable long id) {
 
         orderService.deleteOrder(id);

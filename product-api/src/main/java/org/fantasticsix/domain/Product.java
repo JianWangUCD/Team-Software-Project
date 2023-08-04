@@ -23,6 +23,9 @@ public class Product {
     private String detail;
     private Double price;
     private Integer stock;
+
+    //private int version;
+
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime saleStartTime;
 

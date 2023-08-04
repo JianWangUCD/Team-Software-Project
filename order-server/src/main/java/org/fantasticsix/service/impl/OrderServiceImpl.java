@@ -91,10 +91,7 @@ public class OrderServiceImpl implements OrderService {
             .maximumSize(1000) // Maximum size of the cache.
             .build();
     @Override
-    public Order createOrder(long productId, long userId) {
-//        log.info("Received an order request for product {}, then calling the product microservice to query this product information",
-//                productId);
-
+    public synchronized Order createOrder(long productId, long userId) {
         // Try to retrieve the product information from the cache.
         Product product = productCache.getIfPresent(productId);
         if (product == null) {
@@ -109,55 +106,53 @@ public class OrderServiceImpl implements OrderService {
             log.info("Product information found in cache. Skipping the fetch from the product microservice.");
         }
 
-        // Product product = productFeignAPI.getProduct(productId);
-//        log.info("The information of the product {} is found, the content is: {}", productId,
-//                JSON.toJSONString(product));
-
         final String lockKey = productId + ":RedissonLock";
         boolean isCreated = false;
         Order order = null;
         RLock rLock = redissonClient.getLock(lockKey);
         try {
-            if (rLock.tryLock(5, 100, TimeUnit.MILLISECONDS)) {
-                List<Order> list = orderRepository.findByUserIdAndProductId(userId, productId);
-                if (list.size() >= 1) {
-                    log.info("You've already snapped up this item.");
-                }
-                if (product != null && product.getStock() > 0) {
-                    //创建订单并保存
-                    order = new Order();
-                    order.setUserId(userId);
-                    order.setProductId(productId);
-                    order.setAmount(product.getPrice());
+            // Acquire the lock before proceeding with the critical section
+            rLock.lock();
 
-                    order.setProductName(product.getProductName());
-                    order.setImg(product.getImg());
-                    order.setPrice(product.getPrice());
-                    order.setOrderTime(LocalDateTime.now());
+            List<Order> list = orderRepository.findByUserIdAndProductId(userId, productId);
+            if (list.size() >= 1) {
+                log.info("You've already snapped up this item.");
+            }
+            if (product != null && product.getStock() > 0) {
+                log.info("============current stock is {}===============", product.getStock());
 
-                    orderRepository.save(order);
-                    product.setStock(product.getStock() - 1);
-                    productFeignAPI.updateProduct(productId, product);
-                    log.info("Create order successfully, the order information is {}", JSON.toJSONString(order));
-                    isCreated = true;
-                } else {
-                    log.info("Failed to snap, item sold out.");
-                }
+                product.setStock(product.getStock() - 1);
+                productFeignAPI.updateProduct(productId, product);
+
+                //创建订单并保存
+                order = new Order();
+                order.setUserId(userId);
+                order.setProductId(productId);
+                order.setAmount(product.getPrice());
+
+                order.setProductName(product.getProductName());
+                order.setImg(product.getImg());
+                order.setPrice(product.getPrice());
+                order.setOrderTime(LocalDateTime.now());
+
+                orderRepository.save(order);
+                log.info("Create order successfully, the order information is {}", JSON.toJSONString(order));
+                isCreated = true;
+            } else {
+                log.info("Failed to snap, item sold out.");
             }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            if (rLock.isLocked()) {
-                if (rLock.isHeldByCurrentThread()) {
-                    rLock.unlock();
-                }
-            }
+            // Release the lock after the critical section is executed
+            rLock.unlock();
             if (isCreated)
                 return order;
         }
 
         return null;
     }
+
 
     //已弃用
     public void updateProductStock(long productId, Order order) {

@@ -57,6 +57,14 @@ public class ProductController {
         return product;
     }
 
+//    // that method is for preventing overselling when creating order
+//    @GetMapping("/flashsale/products/{id}/{version}")
+//    public Product getProduct(@PathVariable long id, @PathVariable int version) {
+//
+//        Product product = productService.getProductByIdAndVersion(id, version);
+//        return product;
+//    }
+
     @DeleteMapping("/seller/products/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable long id) {
 

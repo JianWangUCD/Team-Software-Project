@@ -14,6 +14,9 @@ public interface ProductService {
 
     Product getProduct(long id);
 
+//    // that method is for preventing overselling when creating order
+//    Product getProductByIdAndVersion(long id, int version);
+
     void deleteProduct(long id);
 
     Product updateProduct(long id, Product product);
